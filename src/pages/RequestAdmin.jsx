@@ -38,11 +38,6 @@ const RequestAdmin = () => {
         ),
     },
     {
-      title: "Member Code",
-      dataIndex: "MEMB_CODE",
-      key: "MEMB_CODE",
-    },
-    {
       title: "Notes",
       dataIndex: "NOTES",
       key: "NOTES",
