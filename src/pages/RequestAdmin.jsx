@@ -126,6 +126,7 @@ const RequestAdmin = () => {
     <AdminPage>
       <Card className="my-card">
         <h4>RequestAdmin</h4>
+        <p>iprang it</p>
         <Table
           dataSource={data}
           columns={columns}
