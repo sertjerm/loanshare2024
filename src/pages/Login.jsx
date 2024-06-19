@@ -110,6 +110,7 @@ const Login = (props) => {
            
           </Card>
         <Card className="my-card mt-2" >
+        <h1>Test Commit Git</h1>
         <p class="text-primary">This text is primary color.</p>
         <p class="text-secondary">This text is secondary color.</p>
         <p class="text-success">This text is success color.</p>
