@@ -1,0 +1,88 @@
+.request-card {
+  height: 100%;
+  // background: yellow;
+  form {
+    width: 100%;
+    justify-content: center;
+    // background: red;
+    .div-form-group {
+      // border: none;
+      // box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.12);
+      border: 1px solid #eee;
+      padding: 24px 0;
+      border-radius: 6px;
+      //  background: pink;
+
+      .ant-row {
+        align-items: center;
+        .ant-col {
+          // background-color: yellow;
+          max-width: 300px;
+          text-align: center;
+          .ant-input-number-input {
+            text-align: center;
+          }
+          .input,
+          .ant-input,
+          .ant-input-number {
+            // color: blue;
+            // width: 200px;
+            // width: inherit;
+            width: 100%;
+            text-align: center;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 0;
+            // border-bottom: 1px solid silver;
+            border-bottom: 1px solid rgb(225, 225, 227);
+            // background-color: yellow;
+            // background:yellowgreen;
+          }
+        //   .ant-form-item-has-error{
+        //   .ant-input.disabled {
+        //     color: blue;
+        //     background: none;
+        //   }
+        // }
+
+          label.ant-radio-button-wrapper {
+            border-radius: 0;
+          }
+        }
+      }
+    }
+    // .div-form-group.group-1 {
+    //   border-color: yellowgreen;
+    // }
+    // .div-form-group.group-2 {
+    //   border-color: orange;
+    // }
+    // .div-form-group.group-3 {
+    //   border-color: red;
+    // }
+    .div-form-control {
+      margin-top: 20px;
+      text-align: center;
+    }
+  }
+  // }
+  .min-remain.errror {
+    text-align: center;
+    color: red;
+  }
+  .min-remain.success {
+    text-align: center;
+    color: green;
+  }
+}
+
+.ant-input.disabled {
+  color: green;
+  background: none;
+}
+.ant-form-item-has-error{
+  .ant-input.disabled {
+    color: red;
+    background: none;
+  }
+}

@@ -1,0 +1,71 @@
+/* custom-swal.css */
+@import "sweetalert2/dist/sweetalert2.min.css";
+
+.my-swal-card {
+  background: #fff;
+  border-radius: 0.625em;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.my-swal-card h2 {
+  font-size: 1.875em;
+  margin-bottom: 0.625em;
+}
+
+.my-swal-card p {
+  font-size: 1em;
+  margin-bottom: 1.25em;
+}
+
+.my-swal-card .swal2-actions {
+  margin-top: 1.25em;
+  display: flex;
+  justify-content: center;
+}
+
+.my-swal-card .swal2-styled {
+  margin: 0 0.3125em;
+}
+
+.alert-card {
+  background: #fff;
+  border-radius: 0.625em;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 500px;
+  text-align: center;
+  border: 1px solid #d3d3d3;
+}
+
+.alert-card .icon {
+  font-size: 4em;
+  color: #f27474;
+  margin-bottom: 20px;
+}
+
+.alert-card h2 {
+  font-size: 1.875em;
+  margin-bottom: 0.625em;
+  color: #545454;
+}
+
+.alert-card p {
+  font-size: 1em;
+  margin-bottom: 1.25em;
+  color: #545454;
+}
+
+.alert-card .button {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 0.3125em;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #7a6ff0;
+  color: white;
+  text-decoration: none;
+}

@@ -1,0 +1,34 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  .ant-btn {
+    border-radius: 0;
+  }
+  .ant-layout {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ant-layout-content {
+    // background: yellow;
+    flex-grow: 1;
+    display: flex; /* ตัวเลือก: หาก Content ของคุณต้องการให้ children ยืดขยายเต็มความสูง */
+  }
+  pre {
+    white-space: pre-wrap;
+    text-align: left;
+  }
+  .my-card {
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    .ant-card-head-title {
+      text-align: center;
+      color: hwb(203 15% 9%);
+    }
+  }
+
+}

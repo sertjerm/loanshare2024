@@ -1,0 +1,16 @@
+.steps-content {
+  width: 100%;
+  background: rgb(189, 192, 197);
+  height: 100%;
+}
+
+.ant-steps-item-active {
+  &:not(.ant-steps-item-error) {
+    .ant-steps-item-icon {
+      background: green !important; //ยกเว้น ant-steps-item-error  ให้คงสีเดิมไว้
+      .ant-steps-icon {
+        color: #fff !important;
+      }
+    }
+  }
+}

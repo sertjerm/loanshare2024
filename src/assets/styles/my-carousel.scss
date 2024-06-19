@@ -1,0 +1,19 @@
+.carousel-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .prev-button {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+  
+  .next-button {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+  }
+  

@@ -1,0 +1,27 @@
+.login {
+  height: 100%;
+  background: yellowgreen;
+  .row {
+    display: flex;
+    justify-content: center;
+    // height: 100%;
+    // d-flex justify-content-center align-item-center
+    // .div.col-12 {
+
+    //   .login-card {
+    //     border: none;
+    //     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    //     .ant-card-head-title {
+    //       text-align: center;
+    //       color: hwb(203 15% 9%);
+    //     }
+    //   }
+    // }
+  }
+  .count-down {
+    .ant-tag {
+      font-size: 20px;
+      padding:5px 10px;
+    }
+  }
+}

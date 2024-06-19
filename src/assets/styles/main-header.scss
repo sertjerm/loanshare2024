@@ -1,0 +1,10 @@
+.ant-layout-header {
+  height: 64px;
+  padding: 0; // 50px;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 64px;
+  .container {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
