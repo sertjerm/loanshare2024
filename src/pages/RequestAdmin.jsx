@@ -38,11 +38,6 @@ const RequestAdmin = () => {
         ),
     },
     {
-      title: "Notes",
-      dataIndex: "NOTES",
-      key: "NOTES",
-    },
-    {
       title: "Payment Type",
       dataIndex: "PAYMET",
       key: "PAYMET",
