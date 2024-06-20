@@ -1,19 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MyLoader from "../components/custom/MyLoader";
 import * as actions from "../app/actions/main";
 import GeneralPage, { AdminPage } from "./GeneralPage";
-import { Card, Table } from "antd";
+import { Card, Flex, Table, Button } from "antd";
 import moment from "moment";
+import { render } from "react-dom";
+import { formatDateInThai } from "../app/jsUtils/thaiMoment.js";
 
 const RequestAdmin = () => {
   const dispatch = useDispatch();
   const { isLoading, items: data } = useSelector(
     (state) => state.main.requestList
   );
+  const { item: savedloan } = useSelector((state) => state.main.savedloan);
+  const [formdata, setFormData] = useState(null);
+
   useEffect(() => {
     dispatch(actions.GetLoanRequests());
   }, []);
+
+  // useEffect(() => {
+  //   setFormData(data);
+  // },[data]);
+
   if (isLoading) {
     return <MyLoader />;
   }
@@ -68,13 +78,14 @@ const RequestAdmin = () => {
       key: "REQ_BATCHNO",
     },
     {
-      title: "Request Date",
+      title: "วัน-เวลายื่นกู้",
       dataIndex: "REQ_DATE",
       key: "REQ_DATE",
-      render: (text) =>
-        moment(parseInt(text.replace(/\/Date\((\d+)\+\d+\)\//, "$1"))).format(
-          "MM/DD/YYYY HH:mm:ss"
-        ),
+      // render: (text) =>
+      //   moment(parseInt(text.replace(/\/Date\((\d+)\+\d+\)\//, "$1"))).format(
+      //     "MM/DD/YYYY HH:mm:ss"
+      //   ),
+      render: (text) => formatDateInThai(text),
     },
     {
       title: "Request ID",
