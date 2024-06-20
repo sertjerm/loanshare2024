@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import MyLoader from "../components/custom/MyLoader";
 import * as actions from "../app/actions/main";
 import GeneralPage, { AdminPage } from "./GeneralPage";
-import { Card, Table } from "antd";
+import { Card, Flex, Table } from "antd";
 import moment from "moment";
 
 const RequestAdmin = () => {

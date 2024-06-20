@@ -8,8 +8,6 @@ import MyLoader from "../components/custom/MyLoader";
 import "../assets/styles/request-form.scss";
 import * as util from "../components/custom/jsUtils.js";
 import GeneralPage from "./GeneralPage.jsx";
-import MyNumberSlider from "../components/custom/MyNumberSlider.jsx";
-import { Typography } from "@mui/material";
 
 // Formatter function to handle thousand separators correctly
 const numberFormatter = (value) => {
@@ -256,23 +254,6 @@ const RequestForm = (props) => {
     //   CNT: MAX_CNT,
     // });
   };
-  const handleChange = (id, value) => {
-    console.log("handleChange id,value=", id, value);
-         let temp = { ...newloan, [id]: value };
-      performCalculations(temp, id, value);
-  };
-  // const handleChange = (e, id) => {
-  //   if (e.key === "Enter") {
-  //     let value = util.parserNumber(e.target.value);
-  //     // if(id=="CNT"){
-  //     //   value = parseInt(value);
-  //     // }else{
-  //     //   value = parseFloat(value);
-  //     // }
-  //     let temp = { ...newloan, [id]: value };
-  //     performCalculations(temp, id, value);
-  //   }
-  // };
   if (isLoading) {
     return <MyLoader />;
   }
@@ -302,37 +283,66 @@ const RequestForm = (props) => {
             <Form.Item
               label="ยอดเงินกู้ AMT"
               name="AMT"
-              // rules={[{ required: true, message: "ยอดเงินกู้ ไม่ถูกต้อง" }]}
+              rules={[{ required: true, message: "ยอดเงินกู้ ไม่ถูกต้อง" }]}
             >
-              {/* <NumericFormat
+              {/* <InputNumber
+                size="large"
+                formatter={(value) =>
+                  value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                onKeyDown={(e) => handleKeyDown(e, "AMT")}
+              /> */}
+              <NumericFormat
                 className="ant-input"
                 value={newloan?.AMT}
                 displayType="input"
                 thousandSeparator
                 decimalScale={2}
                 onKeyDown={(e) => handleKeyDown(e, "AMT")}
-              /> */}
-              <MyNumberSlider
-                min={1000}
-                max={newloan?.MAX_AMT}
-                step={1000}
-                label="วงเงินกู้"
-                name="AMT"
-                handleChange={handleChange}
               />
             </Form.Item>
 
-            <Form.Item label="จำนวนงวดผ่อนชำระ" name="CNT">
-              <MyNumberSlider
-                min={10}
-                max={newloan?.MAX_CNT}
-                step={5}
-                name="CNT"
-                label="จำนวนงวด"
-                handleChange={handleChange}
-                // color="secondary"
+            <Form.Item
+              label="จำนวนงวดผ่อนชำระ"
+              name="CNT"
+              rules={[
+                { required: true, message: "จำนวนงวดผ่อนชำระ ไม่ถูกต้อง" },
+              ]}
+            >
+              <Input onKeyDown={(e) => handleKeyDown(e, "CNT")} />
+            </Form.Item>
+
+            <Form.Item
+              label={`เงินเหลือรับ (ขั้นต่ำ ${formattedMinRemain})`}
+              name="REMAIN"
+              rules={[
+                () => ({
+                  validator(_, value) {
+                    if (value > newloan?.MIN_REMAIN) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("เงินเหลือรับไม่ถูกต้อง"));
+                  },
+                }),
+              ]}
+            >
+              {/* <PatternFormat
+                // value={newloan?.REMAIN}
+                format="###,###"
+                displayType="text"
+                // displayType="number"
+              /> */}
+              <NumericFormat
+                className="ant-input disabled"
+                value={newloan?.REMAIN}
+                disabled
+                displayType="input"
+                thousandSeparator
+                decimalScale={2}
               />
             </Form.Item>
+
             <Form.Item
               label="วิธีส่งชำระ"
               name="PAYMENT_TYPE"
@@ -348,31 +358,6 @@ const RequestForm = (props) => {
                 onChange={onPayMentChange}
               />
             </Form.Item>
-            <Form.Item
-              label={`เงินเหลือรับ (ขั้นต่ำ ${formattedMinRemain})`}
-              name="REMAIN"
-              rules={[
-                () => ({
-                  validator(_, value) {
-                    if (value > newloan?.MIN_REMAIN) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error("เงินเหลือรับไม่ถูกต้อง"));
-                  },
-                }),
-              ]}
-            >
-              <Typography variant="h4" gutterBottom>
-                <NumericFormat
-                  value={newloan?.REMAIN}
-                  displayType="text"
-                  thousandSeparator
-                  decimalScale={2}
-                />
-              </Typography>
-            </Form.Item>
-
-        
           </div>
 
           <div className="div-form-control">

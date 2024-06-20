@@ -1,8 +1,15 @@
-.general-page {
-  height: 100%;
-  background: rgb(174, 243, 139);
-  .row {
-    display: flex;
-    justify-content: center;
+// .steps-content {
+//   padding: 0;
+  .general-page {
+    height: 100%;
+    background: yellow;
+    padding: 0 !important;
+    .row {
+      display: flex;
+      justify-content: center;
+      .aos-init.aos-animate {
+        // padding: 0;
+      }
+    }
   }
-}
+// }

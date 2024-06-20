@@ -24,6 +24,7 @@ import MemberInfo from "./pages/MemberInfo";
 import Summary from "./pages/Summary";
 import VerifyMember from "./pages/VerifyMember";
 import SitInfo from "./pages/SitInfo";
+import RequestForm2 from "./pages/RequestForm2";
 
 const { Content, Footer } = Layout;
 
@@ -68,10 +69,10 @@ const App = () => {
   // message.info(current);
   var steps = [
     // {
-    //   key: 1,
-    //   title: "login",
+    //   key: 0,
+    //   title: "test",
     //   subTitle: "subTitle1",
-    //   content: <Login next={next} prev={prev} setStep={setStep} />,
+    //   content: <RequestForm2 next={next} prev={prev} setStep={setStep} />,
     //   disabled: "0",
     //   description: "description1",
     // },
@@ -79,10 +80,18 @@ const App = () => {
       key: 1,
       title: "login",
       subTitle: "subTitle1",
-      content: <RequestAdmin next={next} prev={prev} setStep={setStep} />,
+      content: <Login next={next} prev={prev} setStep={setStep} />,
       disabled: "0",
       description: "description1",
     },
+    // {
+    //   key: 1,
+    //   title: "login",
+    //   subTitle: "subTitle1",
+    //   content: <RequestAdmin next={next} prev={prev} setStep={setStep} />,
+    //   disabled: "0",
+    //   description: "description1",
+    // },
     {
       key: 2,
       title: "ตรวจสอบสิทธิ์",
@@ -116,7 +125,12 @@ const App = () => {
       title: "Admin",
       subTitle: "subTitle4",
       content: (
-        <RequestAdmin next={next} prev={prev} setStep={setStep} SignOut={SignOut} />
+        <RequestAdmin
+          next={next}
+          prev={prev}
+          setStep={setStep}
+          SignOut={SignOut}
+        />
       ),
       disabled: "1",
       description: "description4",
@@ -144,9 +158,9 @@ const App = () => {
               status={current.isError ? "error" : ""}
               onChange={onChangeStep}
               // percent={80}
-              type="navigation"
+               type={window.innerWidth>500?"navigation":"inline"}
               // type="inline"
-              // size="small"
+              //  size="small"
             />
 
             <div className="steps-content">{steps[current.index]?.content}</div>
