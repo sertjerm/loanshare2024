@@ -107,7 +107,7 @@ const RequestAdmin = () => {
       key: "REQ_REMAIN",
     },
     {
-      title: "Status",
+      title: "สถานะ",
       dataIndex: "REQ_STATUS",
       key: "REQ_STATUS",
     },
