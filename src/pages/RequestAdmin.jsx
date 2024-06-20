@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import MyLoader from "../components/custom/MyLoader";
 import * as actions from "../app/actions/main";
 import GeneralPage, { AdminPage } from "./GeneralPage";
-import { Card, Flex, Table, Button } from "antd";
+import { Card, Flex, Table, Button, Menu, Dropdown, Space, Badge } from "antd";
 import moment from "moment";
 import { render } from "react-dom";
 import { formatDateInThai } from "../app/jsUtils/thaiMoment.js";
+import { DownOutlined } from "@ant-design/icons";
 
 const RequestAdmin = () => {
   const dispatch = useDispatch();
@@ -20,13 +21,27 @@ const RequestAdmin = () => {
     dispatch(actions.GetLoanRequests());
   }, []);
 
-  // useEffect(() => {
-  //   setFormData(data);
-  // },[data]);
+  useEffect(() => {
+    setFormData(data);
+  },[data]);
 
   if (isLoading) {
     return <MyLoader />;
   }
+
+  const handleStatusClick = (e, record) => {
+    const { key } = e;
+    const updatedData = data.map(item => {
+      if (item.REQ_ID === record.REQ_ID) {
+        return { ...item, REQ_STATUS: key };
+      }
+      return item;
+    });
+    // Update the state with the new array
+    setFormData(updatedData);
+    // Dispatch the action with the updated data
+    dispatch(actions.SaveLoanRequest(updatedData.find(item => item.REQ_ID === record.REQ_ID)));
+  };
 
   const handleGeneratePDF = () => {
     window.open("https://apps3.coop.ku.ac.th/php/mpdf/maprang/salary/salary_encrypt.php?year=2567&month=05&mbcode=000062");
@@ -69,6 +84,27 @@ const RequestAdmin = () => {
       title: "สถานะรายการ",
       dataIndex: "REQ_STATUS",
       key: "REQ_STATUS",
+      render: (status, record) => {
+        const menu = (
+          <Menu onClick={(e) => handleStatusClick(e, record)}>
+            <Menu.Item key="A">อนุมัติ</Menu.Item>
+            <Menu.Item key="P">รอดำเนินการ</Menu.Item>
+            <Menu.Item key="D">ไม่อนุมัติ</Menu.Item>
+          </Menu>
+        );
+        return (
+          <Dropdown overlay={menu} trigger={["click"]}>
+            <Button>
+              <Space>
+                {status === "A" && <Badge status="success" text="อนุมัติ" />}
+                {status === "P" && <Badge status="warning" text="รอดำเนินการ" />}
+                {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
+        )
+      }
     },
     {
       title: "Batch No.",
