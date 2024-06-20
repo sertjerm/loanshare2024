@@ -38,7 +38,7 @@ const RequestAdmin = () => {
         ),
     },
     {
-      title: "Payment Type",
+      title: "วิธีการส่งชำระ",
       dataIndex: "PAYMET",
       key: "PAYMET",
     },
@@ -97,7 +97,7 @@ const RequestAdmin = () => {
       key: "REQ_REMAIN",
     },
     {
-      title: "Status",
+      title: "สถานะรายการ",
       dataIndex: "REQ_STATUS",
       key: "REQ_STATUS",
     },
