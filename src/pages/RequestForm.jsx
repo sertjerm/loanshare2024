@@ -99,9 +99,7 @@ const RequestForm = (props) => {
     }
 
     REMAIN = TOT_BALN - PPM; //.toFixed(2));
-    // // if(REMAIN>MIN_REMAIN){
-    // // if (MAX_PPM > PPM) {
-    // // setStep(null, false);
+
     dispatch(
       actions.updateNewLoan({
         ...loan,
@@ -117,31 +115,6 @@ const RequestForm = (props) => {
     // Update the form with new values
     form.setFieldsValue({ ...loan, AMT, PPM, REMAIN, TON, TOT_BALN });
 
-    // if (MAX_PPM < PPM) {
-    //   // } else {
-    //   // setStep(null, true);
-    //   // alert("Error");
-    //   // message.error(`เงินเหลือรับ ${REMAIN} กรุณาตรวจสอบ วงเงินกู้ หรือจำนวนงวด`)
-    //   Swal.fire({
-    //     title: "กรุณาตรวจสอบ!",
-    //     text: `เงินเหลือรับ ${REMAIN} กรุณาตรวจสอบ วงเงินกู้ หรือจำนวนงวด`,
-    //     icon: "error",
-    //   });
-    // } else {
-    //   // dispatch(
-    //   //   actions.updateNewLoan({
-    //   //     ...loan,
-    //   //     AMT,
-    //   //     PPM,
-    //   //     REMAIN,
-    //   //     TON,
-    //   //     TOT_BALN,
-    //   //     CNT,
-    //   //   })
-    //   // );
-    //   // // Update the form with new values
-    //   // form.setFieldsValue({ ...loan, AMT, PPM, REMAIN, TON, TOT_BALN });
-    // }
     console.log(
       `PAYMENT_TYPE=${PAYMENT_TYPE},TON=${TON},DOG=${DOG},PPM=${PPM},REMAIN=${REMAIN}`
     );
@@ -154,29 +127,6 @@ const RequestForm = (props) => {
     }
   }, [user, dispatch]);
 
-  // const onFinish = (values) => {
-  //   console.log("Success:", values);
-  //   form
-  //     .validateFields()
-  //     .then(() => {
-  //       dispatch(actions.SaveLoanRequest(newloan));
-  //       Swal.fire({
-  //         title: "บันทึกข้อมูลเรียบร้อย",
-  //         text: "บันทึกข้อมูลเรียบร้อย",
-  //         icon: "success",
-  //       }).then(() => {
-  //         next(null, false);
-  //       });
-  //     })
-  //     .catch(() => {
-  //       setStep(null, true);
-  //       Swal.fire({
-  //         title: "กรุณาตรวจสอบ!",
-  //         text: `เงินเหลือรับ ${newloan.REMAIN} กรุณาตรวจสอบ วงเงินกู้ หรือจำนวนงวด`,
-  //         icon: "error",
-  //       });
-  //     });
-  // };
   const onFinish = async (values) => {
     console.log("Success:", values);
     try {
@@ -207,18 +157,7 @@ const RequestForm = (props) => {
     console.log("Failed:", errorInfo);
   };
 
-  const handleKeyDown = (e, id) => {
-    if (e.key === "Enter") {
-      let value = util.parserNumber(e.target.value);
-      // if(id=="CNT"){
-      //   value = parseInt(value);
-      // }else{
-      //   value = parseFloat(value);
-      // }
-      let temp = { ...newloan, [id]: value };
-      performCalculations(temp, id, value);
-    }
-  };
+
 
   const onPayMentChange = (e) => {
     let value = e.target.value;
@@ -245,34 +184,15 @@ const RequestForm = (props) => {
       CNT: MAX_CNT,
       PAYMENT_TYPE: 2,
     };
-    // let updatedLoan = { ...newloan, PAYMENT_TYPE: 1 };
     performCalculations(updatedLoan, "AMT", updatedLoan.AMT);
-    // dispatch(actions.updateNewLoan(updatedLoan));
-    // // Update the form with new values
-    // form.setFieldsValue({
-    //   AMT: MAX_AMT,
-    //   PPM: MAX_PPM,
-    //   REMAIN: 0,
-    //   CNT: MAX_CNT,
-    // });
+ 
   };
   const handleChange = (id, value) => {
     console.log("handleChange id,value=", id, value);
          let temp = { ...newloan, [id]: value };
       performCalculations(temp, id, value);
   };
-  // const handleChange = (e, id) => {
-  //   if (e.key === "Enter") {
-  //     let value = util.parserNumber(e.target.value);
-  //     // if(id=="CNT"){
-  //     //   value = parseInt(value);
-  //     // }else{
-  //     //   value = parseFloat(value);
-  //     // }
-  //     let temp = { ...newloan, [id]: value };
-  //     performCalculations(temp, id, value);
-  //   }
-  // };
+
   if (isLoading) {
     return <MyLoader />;
   }
@@ -302,16 +222,8 @@ const RequestForm = (props) => {
             <Form.Item
               label="ยอดเงินกู้ AMT"
               name="AMT"
-              // rules={[{ required: true, message: "ยอดเงินกู้ ไม่ถูกต้อง" }]}
             >
-              {/* <NumericFormat
-                className="ant-input"
-                value={newloan?.AMT}
-                displayType="input"
-                thousandSeparator
-                decimalScale={2}
-                onKeyDown={(e) => handleKeyDown(e, "AMT")}
-              /> */}
+           
               <MyNumberSlider
                 min={1000}
                 max={newloan?.MAX_AMT}
@@ -349,6 +261,20 @@ const RequestForm = (props) => {
               />
             </Form.Item>
             <Form.Item
+              label={`ส่งต่อเดือน`}
+              name="PPM"
+            
+            >
+              <Typography variant="h4" gutterBottom>
+                <NumericFormat
+                  value={newloan?.PPM}
+                  displayType="text"
+                  thousandSeparator
+                  decimalScale={2}
+                />
+              </Typography>
+            </Form.Item>
+            <Form.Item
               label={`เงินเหลือรับ (ขั้นต่ำ ${formattedMinRemain})`}
               name="REMAIN"
               rules={[
@@ -364,6 +290,7 @@ const RequestForm = (props) => {
             >
               <Typography variant="h4" gutterBottom>
                 <NumericFormat
+                className={newloan?.REMAIN<newloan?.MIN_REMAIN?"text-danger":""}
                   value={newloan?.REMAIN}
                   displayType="text"
                   thousandSeparator
