@@ -17,6 +17,11 @@ const RequestAdmin = () => {
   if (isLoading) {
     return <MyLoader />;
   }
+
+  const handleGeneratePDF = () => {
+    window.open("https://apps3.coop.ku.ac.th/php/mpdf/maprang/salary/salary_encrypt.php?year=2567&month=05&mbcode=000062");
+  };
+
   const columns = [
     {
       title: "Application Name",
@@ -128,6 +133,13 @@ const RequestAdmin = () => {
           scroll={{ x: 1500 }}
         />
       </Card>
+      <div>
+        <Flex gap="small" wrap="wrap">
+        <Button type="primary" onClick={handleGeneratePDF}>
+              ออกรายงานส่งการเงิน
+        </Button>
+        </Flex>
+      </div>
     </AdminPage>
   );
 };
