@@ -38,6 +38,11 @@ const RequestAdmin = () => {
         ),
     },
     {
+      title: "ชื่อ-นามสกุล",
+      dataIndex: "FULLNAME",
+      key: "FULLNAME",
+    },
+    {
       title: "วิธีการส่งชำระ",
       dataIndex: "PAYMET",
       key: "PAYMET",
