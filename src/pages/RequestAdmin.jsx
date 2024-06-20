@@ -34,23 +34,10 @@ const RequestAdmin = () => {
 
   const columns = [
     {
-      title: "Application Name",
-      dataIndex: "APP_NAME",
-      key: "APP_NAME",
-    },
-    {
-      title: "Interest Rate",
-      dataIndex: "INT_RATE",
-      key: "INT_RATE",
-    },
-    {
-      title: "Last Update",
-      dataIndex: "LAST_UPDATE",
-      key: "LAST_UPDATE",
-      render: (text) =>
-        moment(parseInt(text.replace(/\/Date\((\d+)\+\d+\)\//, "$1"))).format(
-          "MM/DD/YYYY HH:mm:ss"
-        ),
+      title: "วัน-เวลายื่นกู้",
+      dataIndex: "REQ_DATE",
+      key: "REQ_DATE",
+      render: (text) => formatDateInThai(text),
     },
     {
       title: "ชื่อ-นามสกุล",
@@ -58,62 +45,23 @@ const RequestAdmin = () => {
       key: "FULLNAME",
     },
     {
-      title: "วิธีการส่งชำระ",
-      dataIndex: "PAYMET",
-      key: "PAYMET",
-    },
-    {
-      title: "Registration Date",
-      dataIndex: "REG_DATE_STR",
-      key: "REG_DATE_STR",
-    },
-    {
-      title: "Requested Amount",
+      title: "ยอดเงินกู้",
       dataIndex: "REQ_AMT",
       key: "REQ_AMT",
     },
     {
-      title: "Batch No.",
-      dataIndex: "REQ_BATCHNO",
-      key: "REQ_BATCHNO",
-    },
-    {
-      title: "วัน-เวลายื่นกู้",
-      dataIndex: "REQ_DATE",
-      key: "REQ_DATE",
-      // render: (text) =>
-      //   moment(parseInt(text.replace(/\/Date\((\d+)\+\d+\)\//, "$1"))).format(
-      //     "MM/DD/YYYY HH:mm:ss"
-      //   ),
-      render: (text) => formatDateInThai(text),
-    },
-    {
-      title: "Request ID",
-      dataIndex: "REQ_ID",
-      key: "REQ_ID",
-    },
-    {
-      title: "Installment Number",
+      title: "จำนวนงวด",
       dataIndex: "REQ_INSNUM",
       key: "REQ_INSNUM",
     },
     {
-      title: "Interest",
-      dataIndex: "REQ_INTR",
-      key: "REQ_INTR",
+      title: "วิธีการส่งชำระ",
+      dataIndex: "PAYMET",
+      key: "PAYMET",
+      render: (value) => (value === 1 ? "ส่งเงินต้นคงที่" : "ส่งแฟลตเรต"),
     },
     {
-      title: "Request No.",
-      dataIndex: "REQ_NO",
-      key: "REQ_NO",
-    },
-    {
-      title: "Principal",
-      dataIndex: "REQ_PRCP",
-      key: "REQ_PRCP",
-    },
-    {
-      title: "Remaining Amount",
+      title: "เหลือรับ",
       dataIndex: "REQ_REMAIN",
       key: "REQ_REMAIN",
     },
@@ -123,14 +71,25 @@ const RequestAdmin = () => {
       key: "REQ_STATUS",
     },
     {
-      title: "Transaction",
-      dataIndex: "REQ_TRANS",
-      key: "REQ_TRANS",
+      title: "Batch No.",
+      dataIndex: "REQ_BATCHNO",
+      key: "REQ_BATCHNO",
     },
     {
       title: "User ID",
       dataIndex: "USER_ID",
       key: "USER_ID",
+    },
+    {
+      title: "Request No.",
+      dataIndex: "REQ_NO",
+      key: "REQ_NO",
+    },
+    {
+      title: "Transaction",
+      dataIndex: "REQ_TRANS",
+      key: "REQ_TRANS",
+      render: (value) => (value === "0" ? "N" : "Y"),
     },
   ];
   return (
