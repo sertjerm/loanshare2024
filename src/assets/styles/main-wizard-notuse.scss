@@ -1,0 +1,63 @@
+// .ant-steps {
+//   // padding:1em 2em;
+//   padding: 0 2rem;
+//   background-color: greenyellow;
+//   height: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+// .steps-content {
+//   width: 100%;
+//   // background: rgb(189, 192, 197);
+//   height: 100%;
+
+//   padding: 2em 5px;
+// }
+
+// // .ant-steps-item-active {
+// //   &:not(.ant-steps-item-error) {
+// //     .ant-steps-item-icon {
+// //       background: #007bff !important; //ยกเว้น ant-steps-item-error  ให้คงสีเดิมไว้
+// //       .ant-steps-icon {
+// //         color: #fff !important;
+// //       }
+// //     }
+// //   }
+// // }
+
+// @media (max-width: 425px) {
+//   .ant-steps {
+//     flex-direction: row !important;
+//     background-color: yellow;
+//     padding: auto;
+
+//     .ant-steps-item-title,
+//     .ant-steps-item-tail {
+//       display: none !important;
+//     }
+//     .ant-steps-item {
+//       display: none;
+//     }
+//   }
+//   .steps-content {
+//     padding: 5px !important;
+//     // background: none;
+//   }
+// }
+.steps-content {
+  width: 100%;
+  // background: rgb(189, 192, 197);
+  height: 100%;
+}
+
+// .ant-steps-item-active {
+//   &:not(.ant-steps-item-error) {
+//     .ant-steps-item-icon {
+//       background: green !important; //ยกเว้น ant-steps-item-error  ให้คงสีเดิมไว้
+//       .ant-steps-icon {
+//         color: #fff !important;
+//       }
+//     }
+//   }
+// }

@@ -314,13 +314,13 @@ const RequestForm = (props) => {
           </div>
         </Form>
       </Card>
-      <div className="col-12 mt-2">
+      {/* <div className="col-12 mt-2">
         <Card className="my-card mb-2">
           <pre style={{ height: "auto", whiteSpace: "pre-wrap", color: "red" }}>
             {JSON.stringify(newloan, null, 2)}
           </pre>
         </Card>
-      </div>
+      </div> */}
     </GeneralPage>
   );
 };

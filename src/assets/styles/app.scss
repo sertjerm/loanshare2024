@@ -1,0 +1,105 @@
+$bg-color :rgba(255,255,255,0.9);
+// $bg-color :rgba(0,0,0,0.01);
+$bg-content:#0892a8;
+// $bg-content:rgba(255,255,255,0.8);
+// $bg-content:none;
+
+.ant-layout {
+  background-color: #fff;
+  min-height: 100%;
+//   height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  background: $bg-color;
+  // background-color: silver; /* For browsers that do not support gradients */
+  // background-image: linear-gradient(#ddd, #eee);
+  // background-image: linear-gradient(#d9d9d9, #fff);
+}
+
+.ant-layout-header{
+    // border-bottom: 1px solid #17a2b8;
+    background: $bg-color;
+    .app-name{
+        font-family: Kanit;
+        font-size:1.6em;
+        font-weight: 300;
+        text-align: center;
+        color:$bg-content;
+        // border-bottom: 1px solid #eee;
+    //    text-shadow: 4px 2px 0px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+}
+.ant-layout-footer{
+    background: $bg-color; /* หรือสีพื้นหลังที่ต้องการ */
+}
+.ant-layout-content {
+  flex-grow: 1;
+  display: flex; /* ถ้าคุณต้องการให้ children ยืดขยายเต็มความสูง */
+  width: 100%;
+  overflow: hidden; /* ป้องกันการเลื่อน */
+  //   padding: 24px; /* ปรับ padding ตามต้องการ */
+//   background: yellow; /* หรือสีพื้นหลังที่ต้องการ */
+}
+.steps-container {
+  // style={{ background: "red",width:"100%",overflow:"hidden"}}
+  //   background: red;
+  width: 100%;
+}
+.ant-steps {
+//   background: #eee;
+  flex-direction: row !important;
+  height: 48px;
+  justify-content: space-around;
+  align-items: center;
+  display: flex;
+  .ant-steps-item {
+    padding-inline-start: 0 !important;
+    white-space: nowrap !important;
+    height: 100%;
+    // background: green;
+    .ant-steps-item-container {
+      height: 100%;
+      // width: 100%;
+    //   background-color: $bg-color;
+      align-items: center;
+      display: flex;
+    }
+  }
+}
+.steps-content {
+  width: 100%;
+    background: $bg-content;
+  height: 100%;
+}
+
+// // .ant-steps-item-active {
+// //   &:not(.ant-steps-item-error) {
+// //     .ant-steps-item-icon {
+// //       background: green !important; //ยกเว้น ant-steps-item-error  ให้คงสีเดิมไว้
+// //       .ant-steps-icon {
+// //         color: #fff !important;
+// //       }
+// //     }
+// //   }
+// // }
+
+@media (max-width: 425px) {
+  .ant-steps {
+    // flex-direction: row !important;
+    // background-color: yellow;
+    // padding:0 20px;
+    // padding: auto;
+
+    .ant-steps-item-title {
+      display: none !important;
+    }
+    // .ant-steps-item {
+    //   display: none;
+    // }
+  }
+  //   .steps-content {
+  //     padding: 5px !important;
+  //     // background: none;
+  //   }
+}

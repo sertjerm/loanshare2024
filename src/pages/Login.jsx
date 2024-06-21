@@ -1,6 +1,6 @@
 // import React from 'react';
 import { Button, Card, Form, Input, Tag } from "antd";
-import "../assets/styles/login-form.scss";
+// import "../assets/styles/login-form.scss";
 import * as actions from "../app/actions/main";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -57,7 +57,7 @@ const Login = (props) => {
           //   }}
           initialValues={{
             //   remember: true,
-            username: "010999",
+            username: "006315",
             // username: "17365",
             password: "bypass",
           }}

@@ -1,15 +1,24 @@
 // .steps-content {
 //   padding: 0;
+.general-page {
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+
+  // padding: 2em 1em 2em 0 !important;
+  padding:2em 1em;
+  .row {
+    display: flex;
+    justify-content: center;
+    // .aos-init.aos-animate {
+    //   // padding: 0;
+    // }
+  }
+}
+
+@media (max-width: 425px) {
   .general-page {
     height: 100%;
-    background: yellow;
-    padding: 0 !important;
-    .row {
-      display: flex;
-      justify-content: center;
-      .aos-init.aos-animate {
-        // padding: 0;
-      }
-    }
+    //  padding: 0 !important;
   }
-// }
+}
