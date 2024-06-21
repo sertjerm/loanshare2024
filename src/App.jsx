@@ -74,7 +74,7 @@ const App = () => {
     //   key: 0,
     //   title: "test",
     //   subTitle: "subTitle1",
-    //   content: <RequestForm2 next={next} prev={prev} setStep={setStep} />,
+    //   content: <RequestAdmin next={next} prev={prev} setStep={setStep} />,
     //   disabled: "0",
     //   description: "description1",
     // },
@@ -122,21 +122,21 @@ const App = () => {
       disabled: "0",
       description: "description1",
     },
-    // {
-    //   key: 5,
-    //   title: "Admin",
-    //   subTitle: "subTitle4",
-    //   content: (
-    //     <RequestAdmin
-    //       next={next}
-    //       prev={prev}
-    //       setStep={setStep}
-    //       SignOut={SignOut}
-    //     />
-    //   ),
-    //   disabled: "1",
-    //   description: "description4",
-    // },
+    {
+      key: 5,
+      title: "Admin",
+      subTitle: "subTitle4",
+      content: (
+        <RequestAdmin
+          next={next}
+          prev={prev}
+          setStep={setStep}
+          SignOut={SignOut}
+        />
+      ),
+      disabled: "1",
+      description: "description4",
+    },
   ];
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));

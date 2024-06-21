@@ -82,14 +82,17 @@ const Summary = (props) => {
             />
           </Descriptions.Item>
           <Descriptions.Item label="สถานะ">
-            <PendingLoan member={savedloan}  textMode={true} />
+            <PendingLoan member={savedloan} textMode={true} />
           </Descriptions.Item>
         </Descriptions>
         <div className="text-center my-4">
-       
           <Button type="primary" onClick={() => onSignOut()}>
             เสร็จเรียบร้อย
           </Button>
+          {/* 
+          <Button type="primary" onClick={() => next()}>
+            หน้า admin
+          </Button> */}
         </div>
       </Card>
       <Card className="my-card mt-2">
