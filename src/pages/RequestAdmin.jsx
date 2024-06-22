@@ -55,7 +55,7 @@ const RequestAdmin = () => {
       render: (text) => formatDateInThai(text),
     },
     {
-      title: "ชื่อ-นามสกุล",
+      title: "ชื่อ-นามสกุลผู้กู้",
       dataIndex: "FULLNAME",
       key: "FULLNAME",
     },
