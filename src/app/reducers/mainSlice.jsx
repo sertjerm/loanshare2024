@@ -164,6 +164,22 @@ const mainSlice = createSlice({
       state.savedloan.isLoading = false;
       //saveState(state); // Save state to localStorage
     },
+    // updateloanRequest(state) {
+    //   console.log("updateloanRequest", state);
+    //   state.updateloan.isLoading = true;
+    //   state.updateloan.item = null;
+    //   //saveState(state); // Save state to localStorage
+    // },
+    // updateloanSuccess(state, action) {
+    //   console.log("updateloanSuccess action ,state=", action, state);
+    //   state.updateloan.isLoading = false;
+    //   state.updateloan.item = action.payload.data;
+    //   //saveState(state); // Save state to localStorage
+    // },
+    // updateloanFailure(state) {
+    //   state.updateloan.isLoading = false;
+    //   //saveState(state); // Save state to localStorage
+    // },
     newloanUpdate(state, action) {
       console.log("newloanUpdate action ,state=", action, state);
       state.newloan.isLoading = false;

@@ -40,7 +40,7 @@ const RequestAdmin = () => {
     // Update the state with the new array
     setFormData(updatedData);
     // Dispatch the action with the updated data
-    dispatch(actions.SaveLoanRequest(updatedData.find(item => item.REQ_ID === record.REQ_ID)));
+    dispatch(actions.UpdateLoanRequest(updatedData.find(item => item.REQ_ID === record.REQ_ID)));
   };
 
   const handleGeneratePDF = () => {

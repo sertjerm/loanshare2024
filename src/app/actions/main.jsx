@@ -285,3 +285,43 @@ export const SaveLoanRequest = (data) => {
     }
   };
 };
+
+
+// ฟังก์ชันสำหรับการ UpdateLoanRequest
+export const UpdateLoanRequest = (data) => {
+  console.log("UpdateLoanRequest", JSON.stringify(data));
+
+  // ตั้งค่า config สำหรับคำขอ HTTP POST
+  var config = {
+    method: "post",
+    url: `${SERVICE_URL}/UpdateLoanRequest`, // ใช้ Template Literal สำหรับ URL
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(data), // แปลงข้อมูลเป็น JSON string
+  };
+
+  return async (dispatch) => {
+    dispatch(savedloanRequest()); // Dispatch action เพื่อเริ่มการ login
+
+    try {
+      // ส่งคำขอ HTTP POST ไปยังเซิร์ฟเวอร์
+      const response = await axios(config);
+      console.log("UpdateLoanRequest response=",response);
+
+      // ตรวจสอบสถานะการตอบสนองจากเซิร์ฟเวอร์
+      if (response.data.status == 200) {
+        let saved_req = response.data.saved_req; // เก็บข้อมูลผู้ใช้จากการตอบสนอง
+        console.log("UpdateLoanRequest success", saved_req);
+        dispatch(savedloanSuccess({ data: saved_req })); // Dispatch action เมื่อ login สำเร็จ
+      } else {
+        console.log("jwtLogin failed with status:", response.status);
+        dispatch(savedloanFailure()); // Dispatch action เมื่อ login ล้มเหลว
+      }
+    } catch (error) {
+      // จัดการข้อยกเว้นที่อาจเกิดขึ้น
+      console.log("UpdateLoanRequest error:", error);
+      dispatch(savedloanFailure()); // Dispatch action เมื่อ login ล้มเหลว
+    }
+  };
+};
