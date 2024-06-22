@@ -267,7 +267,7 @@ export const SaveLoanRequest = (data) => {
     try {
       // ส่งคำขอ HTTP POST ไปยังเซิร์ฟเวอร์
       const response = await axios(config);
-      console.log("SaveLoanRequest response=",response);
+      console.log("SaveLoanRequest response=", response);
 
       // ตรวจสอบสถานะการตอบสนองจากเซิร์ฟเวอร์
       if (response.data.status == 200) {
@@ -285,7 +285,6 @@ export const SaveLoanRequest = (data) => {
     }
   };
 };
-
 
 // ฟังก์ชันสำหรับการ UpdateLoanRequest
 export const UpdateLoanRequest = (data) => {
@@ -307,7 +306,7 @@ export const UpdateLoanRequest = (data) => {
     try {
       // ส่งคำขอ HTTP POST ไปยังเซิร์ฟเวอร์
       const response = await axios(config);
-      console.log("UpdateLoanRequest response=",response);
+      console.log("UpdateLoanRequest response=", response);
 
       // ตรวจสอบสถานะการตอบสนองจากเซิร์ฟเวอร์
       if (response.data.status == 200) {
@@ -324,4 +323,41 @@ export const UpdateLoanRequest = (data) => {
       dispatch(savedloanFailure()); // Dispatch action เมื่อ login ล้มเหลว
     }
   };
+};
+
+export const DeleteRequest = (req_id) => {
+  console.log(`DeleteRequest ${req_id}`);
+  let  url= `${SERVICE_URL}/DeleteRequest?req_id=${req_id}`
+  return async (dispatch) => {
+    dispatch(loginRequest());
+    let data = null;
+    await axios
+      .get(url)
+      .then(function (response) {
+        data = response.data;
+
+        console.log("DeleteRequest success", data);
+        dispatch(loginFailure());
+      })
+      .catch(function (ex) {
+        console.log(" DeleteRequest error : ", ex);
+        dispatch(loginFailure());
+      });
+  };
+  // let config = {
+  //   method: "get",
+  //   maxBodyLength: Infinity,
+  //   url:
+  //    SERVICE_URL+ "DeleteRequest?req_id=" +
+  //     req_id
+  // };
+
+  // axios
+  //   .request(config)
+  //   .then((response) => {
+  //     console.log(response.data);
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 };

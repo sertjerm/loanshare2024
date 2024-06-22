@@ -33,6 +33,13 @@ const SitInfo = (props) => {
     SignOut();
     prev();
   }
+  function onDelete(req_id) {
+    console.log("onDelete req_id=", req_id);
+    dispatch(actions.DeleteRequest(req_id));
+    // setTimeout(() => {
+    //   onSignOut();
+    // }, 2000);
+  }
 
   useEffect(() => {
     if (loginStatus === "success") {
@@ -82,7 +89,7 @@ const SitInfo = (props) => {
     icon = <CheckCircleOutlined />;
   } else if (member?.REQ_DATE) {
     // type = "warning";
-    type ="info";
+    type = "info";
     title = "มีเงินกู้รอพิจารณา";
     icon = <InfoCircleOutlined />;
   }
@@ -126,15 +133,13 @@ const SitInfo = (props) => {
             </Button>
           </>
         ) : (
-          <Button type="default" size="large" onClick={() => SignOut()}>
-            ออกจากระบบ
-          </Button>
+          <Button type="default" size="large" onClick={() => onDelete(member?.REQ_ID)}>ยกเลิกคำขอ(debug)</Button>
+          // <Button type="default" size="large" onClick={() => SignOut()}>
+          //   ออกจากระบบ
+          // </Button>
         )}
-        
       </Card>
     </GeneralPage>
   );
 };
 export default SitInfo;
-
-
