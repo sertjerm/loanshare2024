@@ -35,8 +35,18 @@ export function dayCount(month, year) {
 }
 
 export const formatterNumber = (value) => {
+  try{
   return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}catch(err){
+  console.log('formatterNumber',err);
+    return value;
+  }
 };
 export const parserNumber = (value) => {
+  try{
   return value.replace(/\$\s?|(,*)/g, "");
+  }catch(err){
+    console.log('parserNumber',err);
+    return value;
+  }
 };

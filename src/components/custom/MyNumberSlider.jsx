@@ -1,51 +1,56 @@
 import React, { useState } from "react";
-import { Box, Slider, Typography } from "@mui/material";
+import { Box, Input, Slider, Typography } from "@mui/material";
 import { NumericFormat } from "react-number-format";
-import { Button } from "antd";
+import { message } from "antd";
+import "../../assets/styles/my-number-slider.scss";
+import { parserNumber } from "./jsUtils";
 
 const MyNumberSlider = (props) => {
   let { min, max, step, name, color } = props;
-  const [value, setValue] = useState(max);
+  const [val, setVal] = useState(max);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-    props.handleChange(name, newValue);
+  const handleSliderInput = (e, newValue) => {
+    onSetValue(newValue);
   };
 
-  function valuetext(value) {
-    return `${value}`;
-  }
+  const handleInputChange = (values) => {
+    let value = values.floatValue;
+    console.log("value,max", value, max);
+    if (value > max) {
+      // message.error(`วงเงินกู้สูงสุดคือ ${max}`);
+      value = max;
+    }
+    if (value <= 0) {
+      value = min;
+    }
+    onSetValue(value);
+  };
+
+  const onSetValue = (v) => {
+    setVal(v);
+    props.handleChange(name, v);
+  };
 
   return (
-    <Box sx={{ width: "100%", padding: 2 }} className="text-center">
-      {/* <Typography variant="h6" gutterBottom>
-        {label}
-      </Typography> */}
+    <Box sx={{ width: "100%", padding: 2 }} className="my-number-slider">
       <Typography variant="h4" gutterBottom>
         <NumericFormat
-          //   className="ant-input"
-        //   id={id}
-        //   name={name}
-          value={value}
-          displayType="text"
-          thousandSeparator
-          decimalScale={2}
-          onChange={handleChange}
-          // onKeyDown={(e) => handleKeyDown(e, "AMT")}
+          value={val}
+          thousandSeparator=","
+          decimalScale={0}
+          customInput={Input}
+          onValueChange={handleInputChange}
+          className="my-input-slider"
+          allowNegative={false} // ไม่อนุญาตให้ป้อนค่าติดลบ
         />
       </Typography>
       <Slider
-      
-       name={name}
-        value={value}
-        onChange={handleChange}
-        aria-labelledby="continuous-slider"
-        getAriaValueText={valuetext}
+        value={typeof val === "number" ? val : 0}
+        onChange={handleSliderInput}
         min={min}
         max={max}
         step={step}
-        valueLabelDisplay="auto"
-        color={color || "primary"}
+        aria-labelledby="slider-with-input"
       />
       <Box display="flex" justifyContent="space-between">
         <Typography>
