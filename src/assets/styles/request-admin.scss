@@ -1,0 +1,33 @@
+.button {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.number {
+    text-align: right;
+}
+
+.datepicker {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+    .ant-space {
+        margin-left: 10px;
+        margin-top: -5px;
+    }
+
+}
+
+.ant-btn {
+    width: 150px;
+    // border: 2px solid red;
+}
+
+.ant-table-row:nth-child(even) {
+    background-color: #f0f0f0; /* สีพื้นหลังสำหรับแถวคู่ */
+}
+
+.ant-table-row:nth-child(odd) {
+    background-color: #ffffff; /* สีพื้นหลังสำหรับแถวคี่ */
+}

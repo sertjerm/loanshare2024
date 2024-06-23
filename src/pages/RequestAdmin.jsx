@@ -3,11 +3,25 @@ import { useDispatch, useSelector } from "react-redux";
 import MyLoader from "../components/custom/MyLoader";
 import * as actions from "../app/actions/main";
 import GeneralPage, { AdminPage } from "./GeneralPage";
-import { Card, Flex, Table, Button, Menu, Dropdown, Space, Badge } from "antd";
+import {
+  Card,
+  Flex,
+  Table,
+  Button,
+  Menu,
+  Dropdown,
+  Space,
+  Badge,
+  message,
+  DatePicker,
+} from "antd";
 import moment from "moment";
 import { render } from "react-dom";
 import { formatDateInThai } from "../app/jsUtils/thaiMoment.js";
 import { DownOutlined } from "@ant-design/icons";
+import "../assets/styles/request-admin.scss";
+import { NumericFormat } from "react-number-format";
+import DateDisabled from "../components/custom/DateDisabled";
 
 const RequestAdmin = () => {
   const dispatch = useDispatch();
@@ -16,6 +30,7 @@ const RequestAdmin = () => {
   );
   const { item: savedloan } = useSelector((state) => state.main.savedloan);
   const [formdata, setFormData] = useState(null);
+  const [dateRange, setDateRange] = useState([null, null]);
 
   useEffect(() => {
     dispatch(actions.GetLoanRequests());
@@ -23,15 +38,16 @@ const RequestAdmin = () => {
 
   useEffect(() => {
     setFormData(data);
-  },[data]);
+  }, [data]);
 
   if (isLoading) {
     return <MyLoader />;
   }
 
   const handleStatusClick = (e, record) => {
+    message.info("Status changed to: " + e.key);
     const { key } = e;
-    const updatedData = data.map(item => {
+    const updatedData = data.map((item) => {
       if (item.REQ_ID === record.REQ_ID) {
         return { ...item, REQ_STATUS: key };
       }
@@ -40,11 +56,28 @@ const RequestAdmin = () => {
     // Update the state with the new array
     setFormData(updatedData);
     // Dispatch the action with the updated data
-    dispatch(actions.UpdateLoanRequest(updatedData.find(item => item.REQ_ID === record.REQ_ID)));
+    dispatch(
+      actions.UpdateLoanRequest(
+        updatedData.find((item) => item.REQ_ID === record.REQ_ID)
+      )
+    );
   };
 
   const handleGeneratePDF = () => {
-    window.open("https://apps3.coop.ku.ac.th/php/mpdf/maprang/salary/salary_encrypt.php?year=2567&month=05&mbcode=000062");
+    window.open(
+      "https://apps3.coop.ku.ac.th/php/mpdf/maprang/salary/salary_encrypt.php?year=2567&month=05&mbcode=000062"
+    );
+  };
+
+  const handleDateSelect = (date) => {
+    if (date) {
+      const filteredData = data.filter((item) =>
+        moment(item.REQ_DATE).isSame(date, "day")
+      );
+      setFormData(filteredData);
+    } else {
+      setFormData(data);
+    }
   };
 
   const columns = [
@@ -63,6 +96,15 @@ const RequestAdmin = () => {
       title: "ยอดเงินกู้",
       dataIndex: "REQ_AMT",
       key: "REQ_AMT",
+      render: (cell, row) => (
+        <div className="number">
+          <NumericFormat
+            value={row.REQ_AMT}
+            displayType={"text"}
+            thousandSeparator={true}
+          />
+        </div>
+      ),
     },
     {
       title: "จำนวนงวด",
@@ -79,6 +121,15 @@ const RequestAdmin = () => {
       title: "เหลือรับ",
       dataIndex: "REQ_REMAIN",
       key: "REQ_REMAIN",
+      render: (cell, row) => (
+        <div className="number">
+          <NumericFormat
+            value={row.REQ_REMAIN}
+            displayType={"text"}
+            thousandSeparator={true}
+          />
+        </div>
+      ),
     },
     {
       title: "สถานะรายการ",
@@ -97,14 +148,16 @@ const RequestAdmin = () => {
             <Button>
               <Space>
                 {status === "A" && <Badge status="success" text="อนุมัติ" />}
-                {status === "P" && <Badge status="warning" text="รอดำเนินการ" />}
+                {status === "P" && (
+                  <Badge status="warning" text="รอดำเนินการ" />
+                )}
                 {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
                 <DownOutlined />
               </Space>
             </Button>
           </Dropdown>
-        )
-      }
+        );
+      },
     },
     {
       title: "Batch No.",
@@ -130,20 +183,28 @@ const RequestAdmin = () => {
   ];
   return (
     <AdminPage>
+      <div className="datepicker">
+        <span>ข้อมูลการยื่นกู้วันที่ </span>
+        <DateDisabled onDateSelect={handleDateSelect} />
+      </div>
       <Card className="my-card">
         <h4>RequestAdmin</h4>
         <Table
-          dataSource={data}
+          // dataSource={data}
+          dataSource={formdata}
           columns={columns}
           rowKey="REQ_ID"
           scroll={{ x: 1500 }}
         />
       </Card>
-      <div>
+      <div className="button">
         <Flex gap="small" wrap="wrap">
-        <Button type="primary" onClick={handleGeneratePDF}>
-              ออกรายงานส่งการเงิน
-        </Button>
+          <Button type="primary">ออกเลขชุดข้อมูล</Button>
+          <Button type="primary">สร้างคำขอในระบบ</Button>
+          <Button type="primary">ส่งข้อมูลไปรอจ่าย</Button>
+          <Button type="primary" onClick={handleGeneratePDF}>
+            ออกรายงานส่งการเงิน
+          </Button>
         </Flex>
       </div>
     </AdminPage>
