@@ -68,6 +68,10 @@ const RequestAdmin = () => {
     },
   };
 
+  const handleSelect = () => {
+    console.log("===Selected===",selectedRowKeys);
+  }
+
   const handleStatusClick = (e, record) => {
     message.info("Status changed to: " + e.key);
     const { key } = e;
@@ -115,6 +119,36 @@ const RequestAdmin = () => {
     }
   };
 
+  const handleTransaction = (e, record) => {
+    message.info("Trans Change to: "+ e.key);
+    const { key } = e;
+
+    // อัพเดตข้อมูลที่กรอง
+    const updatedFormData = formdata.map((item) => {
+      if (item.REQ_ID === record.REQ_ID) {
+        return { ...item, REQ_TRANS: key };
+      }
+      return item;
+    });
+    setFormData(updatedFormData);
+
+    // อัพเดตข้อมูลดั้งเดิม
+    const updatedOriginalData = originalData.map((item) => {
+      if (item.REQ_ID === record.REQ_ID) {
+        return { ...item, REQ_TRANS: key };
+      }
+      return item;
+    });
+    setOriginalData(updatedOriginalData);
+
+    // ส่งข้อมูลที่อัพเดตไปยัง Redux
+    dispatch(
+      actions.UpdateLoanRequest(
+        updatedOriginalData.find((item) => item.REQ_ID === record.REQ_ID)
+      )
+    );
+  }
+
   const columns = [
     {
       title: "วัน-เวลายื่นกู้",
@@ -145,6 +179,7 @@ const RequestAdmin = () => {
       title: "จำนวนงวด",
       dataIndex: "REQ_INSNUM",
       key: "REQ_INSNUM",
+      align: 'center',
     },
     {
       title: "วิธีการส่งชำระ",
@@ -153,7 +188,7 @@ const RequestAdmin = () => {
       render: (value) => (value === 1 ? "ส่งเงินต้นคงที่" : "ส่งแฟลตเรต"),
     },
     {
-      title: "ล้างหนี้",
+      title: "ชำระหนี้เดิม",
       dataIndex: "EXIST_LOAN",
       key: "EXIST_LOAN",
       render: (cell, row) => (
@@ -197,9 +232,7 @@ const RequestAdmin = () => {
             <Button>
               <Space>
                 {status === "A" && <Badge status="success" text="อนุมัติ" />}
-                {status === "P" && (
-                  <Badge status="warning" text="รอดำเนินการ" />
-                )}
+                {status === "P" && <Badge status="warning" text="รอดำเนินการ" />}
                 {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
                 <DownOutlined />
               </Space>
@@ -227,7 +260,25 @@ const RequestAdmin = () => {
       title: "Transaction",
       dataIndex: "REQ_TRANS",
       key: "REQ_TRANS",
-      render: (value) => (value === "0" ? "N" : "Y"),
+      render: (value, record) => {
+        const menu = (
+          <Menu onClick={(e) => handleTransaction(e, record)}>
+            <Menu.Item key="0">N</Menu.Item>
+            <Menu.Item key="1">Y</Menu.Item>
+          </Menu>
+        );
+        return (
+          <Dropdown overlay={menu} trigger={["click"]}>
+          <Button>
+            <Space>
+              {value === "0" && <Badge status="warning" text="N" />}
+              {value === "1" && <Badge status="success" text="Y" />}
+              <DownOutlined />
+            </Space>
+          </Button>
+        </Dropdown>
+        )
+      }
     },
   ];
   return (
@@ -249,7 +300,7 @@ const RequestAdmin = () => {
       </Card>
       <div className="button">
         <Flex gap="small" wrap="wrap">
-          <Button type="primary">ออกเลขชุดข้อมูล</Button>
+          <Button type="primary" onClick={handleSelect}>ออกเลขชุดข้อมูล</Button>
           <Button type="primary">สร้างคำขอในระบบ</Button>
           <Button type="primary">ส่งข้อมูลไปรอจ่าย</Button>
           <Button type="primary" onClick={handleGeneratePDF}>
