@@ -236,7 +236,8 @@ export const GetLoanRequests = (status) => {
       .get(url, { async: true })
       .then(function (response) {
         data = response.data.data;
-
+        data = data.map((loan) => ({...loan, IS_SELECT: 1})) //เพิ่มฟิลด์ IS_SELECT ให้รายการข้อมูลใน data ด้วยการ map
+        //สร้างอ็อบเจ็กต์ใหม่ที่มีทุกคุณสมบัติของ loan และเพิ่มฟิลด์ x ที่มีค่าเป็น 1 แล้ว return ออกมาเป็น array ใหม่ที่ปรับปรุงแล้วให้กับ data โดยไม่แก้ไขข้อมูลเดิมใน data ตั้งแต่ต้น
         console.log("GetLoanRequests success", data);
         dispatch(getRequestListSuccess({ data: data }));
       })

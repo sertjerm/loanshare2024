@@ -31,6 +31,7 @@ const RequestAdmin = () => {
   const { item: savedloan } = useSelector((state) => state.main.savedloan);
   const [formdata, setFormData] = useState(null);
   const [originalData, setOriginalData] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   useEffect(() => {
     dispatch(actions.GetLoanRequests());
@@ -44,6 +45,28 @@ const RequestAdmin = () => {
   if (isLoading) {
     return <MyLoader />;
   }
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys, selectedRows) => {
+      if (newSelectedRowKeys.length === 0) {
+        message.error("ยกเลิก");
+      } else if (selectedRowKeys.length > newSelectedRowKeys.length) {
+        message.error("ยกเลิก");
+      } else {
+        message.success("เลือก row แล้ว");
+      }
+      setSelectedRowKeys(newSelectedRowKeys);
+      const updatedFormDataList = formdata.map((item) => {
+        if (newSelectedRowKeys.includes(item.REQ_ID)) {
+          return { ...item, IS_SELECT: true };
+        } else {
+          return { ...item, IS_SELECT: false };
+        }
+      });
+      setFormData(updatedFormDataList);
+    },
+  };
 
   const handleStatusClick = (e, record) => {
     message.info("Status changed to: " + e.key);
@@ -68,7 +91,11 @@ const RequestAdmin = () => {
     setOriginalData(updatedOriginalData);
 
     // ส่งข้อมูลที่อัพเดตไปยัง Redux
-    dispatch(actions.UpdateLoanRequest(updatedOriginalData.find((item) => item.REQ_ID === record.REQ_ID)));
+    dispatch(
+      actions.UpdateLoanRequest(
+        updatedOriginalData.find((item) => item.REQ_ID === record.REQ_ID)
+      )
+    );
   };
 
   const handleGeneratePDF = () => {
@@ -126,6 +153,20 @@ const RequestAdmin = () => {
       render: (value) => (value === 1 ? "ส่งเงินต้นคงที่" : "ส่งแฟลตเรต"),
     },
     {
+      title: "ล้างหนี้",
+      dataIndex: "EXIST_LOAN",
+      key: "EXIST_LOAN",
+      render: (cell, row) => (
+        <div className="number">
+          <NumericFormat
+            value={row.EXIST_LOAN}
+            displayType={"text"}
+            thousandSeparator={true}
+          />
+        </div>
+      ),
+    },
+    {
       title: "เหลือรับ",
       dataIndex: "REQ_REMAIN",
       key: "REQ_REMAIN",
@@ -156,7 +197,9 @@ const RequestAdmin = () => {
             <Button>
               <Space>
                 {status === "A" && <Badge status="success" text="อนุมัติ" />}
-                {status === "P" && <Badge status="warning" text="รอดำเนินการ" />}
+                {status === "P" && (
+                  <Badge status="warning" text="รอดำเนินการ" />
+                )}
                 {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
                 <DownOutlined />
               </Space>
@@ -196,6 +239,7 @@ const RequestAdmin = () => {
       <Card className="my-card">
         <h4>RequestAdmin</h4>
         <Table
+          rowSelection={rowSelection}
           // dataSource={data}
           dataSource={formdata}
           columns={columns}
