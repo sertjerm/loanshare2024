@@ -30,7 +30,6 @@ const RequestAdmin = () => {
   );
   const { item: savedloan } = useSelector((state) => state.main.savedloan);
   const [formdata, setFormData] = useState(null);
-  const [dateRange, setDateRange] = useState([null, null]);
 
   useEffect(() => {
     dispatch(actions.GetLoanRequests());
@@ -47,7 +46,7 @@ const RequestAdmin = () => {
   const handleStatusClick = (e, record) => {
     message.info("Status changed to: " + e.key);
     const { key } = e;
-    const updatedData = data.map((item) => {
+    const updatedData = formdata.map((item) => {
       if (item.REQ_ID === record.REQ_ID) {
         return { ...item, REQ_STATUS: key };
       }
@@ -148,9 +147,7 @@ const RequestAdmin = () => {
             <Button>
               <Space>
                 {status === "A" && <Badge status="success" text="อนุมัติ" />}
-                {status === "P" && (
-                  <Badge status="warning" text="รอดำเนินการ" />
-                )}
+                {status === "P" && <Badge status="warning" text="รอดำเนินการ" />}
                 {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
                 <DownOutlined />
               </Space>
@@ -189,7 +186,6 @@ const RequestAdmin = () => {
       </div>
       <Card className="my-card">
         <h4>RequestAdmin</h4>
-        <p>Test เมื่อเกิดการ conflict</p>
         <Table
           // dataSource={data}
           dataSource={formdata}
