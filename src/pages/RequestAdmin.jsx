@@ -30,6 +30,7 @@ const RequestAdmin = () => {
   );
   const { item: savedloan } = useSelector((state) => state.main.savedloan);
   const [formdata, setFormData] = useState(null);
+  const [originalData, setOriginalData] = useState([]);
 
   useEffect(() => {
     dispatch(actions.GetLoanRequests());
@@ -37,6 +38,7 @@ const RequestAdmin = () => {
 
   useEffect(() => {
     setFormData(data);
+    setOriginalData(data);
   }, [data]);
 
   if (isLoading) {
@@ -46,20 +48,27 @@ const RequestAdmin = () => {
   const handleStatusClick = (e, record) => {
     message.info("Status changed to: " + e.key);
     const { key } = e;
-    const updatedData = formdata.map((item) => {
+
+    // อัพเดตข้อมูลที่กรอง
+    const updatedFormData = formdata.map((item) => {
       if (item.REQ_ID === record.REQ_ID) {
         return { ...item, REQ_STATUS: key };
       }
       return item;
     });
-    // Update the state with the new array
-    setFormData(updatedData);
-    // Dispatch the action with the updated data
-    dispatch(
-      actions.UpdateLoanRequest(
-        updatedData.find((item) => item.REQ_ID === record.REQ_ID)
-      )
-    );
+    setFormData(updatedFormData);
+
+    // อัพเดตข้อมูลดั้งเดิม
+    const updatedOriginalData = originalData.map((item) => {
+      if (item.REQ_ID === record.REQ_ID) {
+        return { ...item, REQ_STATUS: key };
+      }
+      return item;
+    });
+    setOriginalData(updatedOriginalData);
+
+    // ส่งข้อมูลที่อัพเดตไปยัง Redux
+    dispatch(actions.UpdateLoanRequest(updatedOriginalData.find((item) => item.REQ_ID === record.REQ_ID)));
   };
 
   const handleGeneratePDF = () => {
@@ -70,12 +79,12 @@ const RequestAdmin = () => {
 
   const handleDateSelect = (date) => {
     if (date) {
-      const filteredData = data.filter((item) =>
+      const filteredData = originalData.filter((item) =>
         moment(item.REQ_DATE).isSame(date, "day")
       );
       setFormData(filteredData);
     } else {
-      setFormData(data);
+      setFormData(originalData);
     }
   };
 

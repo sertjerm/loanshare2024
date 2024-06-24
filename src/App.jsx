@@ -86,14 +86,14 @@ const App = () => {
       disabled: "0",
       description: "description1",
     },
-    // {
-    //   key: 1,
-    //   title: "login",
-    //   subTitle: "subTitle1",
-    //   content: <RequestAdmin next={next} prev={prev} setStep={setStep} />,
-    //   disabled: "0",
-    //   description: "description1",
-    // },
+    {
+      key: 1,
+      title: "login",
+      subTitle: "subTitle1",
+      content: <RequestAdmin next={next} prev={prev} setStep={setStep} />,
+      disabled: "0",
+      description: "description1",
+    },
     {
       key: 2,
       title: "ตรวจสอบสิทธิ์",
