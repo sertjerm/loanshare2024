@@ -186,6 +186,7 @@ const mainSlice = createSlice({
       state.newloan.item = action.payload.data;
       //saveState(state); // Save state to localStorage
     },
+
   },
 });
 

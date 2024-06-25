@@ -14,6 +14,7 @@ import {
   Badge,
   message,
   DatePicker,
+  Select,
 } from "antd";
 import moment from "moment";
 import { render } from "react-dom";
@@ -32,14 +33,30 @@ const RequestAdmin = () => {
   const [formdata, setFormData] = useState(null);
   const [originalData, setOriginalData] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [BatchNos, setBatchNos] = useState([]);
+  const [selectedBatchNo, setSelectedBatchNo] = useState(null);
 
   useEffect(() => {
     dispatch(actions.GetLoanRequests());
   }, []);
 
+  // useEffect(() => {
+  //   setFormData(data);
+  //   setOriginalData(data);
+  // }, [data]);
+
+  //!ต่อ
   useEffect(() => {
-    setFormData(data);
-    setOriginalData(data);
+    if (data) {
+      setFormData(data);
+      setOriginalData(data);
+
+      // Extract distinct BatchNo values
+      const distinctBatchNumbers = [
+        ...new Set(data.map((item) => item.REQ_BATCHNO)),
+      ];
+      setBatchNos(distinctBatchNumbers);
+    }
   }, [data]);
 
   if (isLoading) {
@@ -57,6 +74,7 @@ const RequestAdmin = () => {
         message.success("เลือก row แล้ว");
       }
       setSelectedRowKeys(newSelectedRowKeys);
+
       const updatedFormDataList = formdata.map((item) => {
         if (newSelectedRowKeys.includes(item.REQ_ID)) {
           return { ...item, IS_SELECT: true };
@@ -68,9 +86,9 @@ const RequestAdmin = () => {
     },
   };
 
-  const handleSelect = () => {
-    console.log("===Selected===",selectedRowKeys);
-  }
+  // const handleSelect = () => {
+  //   console.log("===Selected===",selectedRowKeys);
+  // }
 
   const handleStatusClick = (e, record) => {
     message.info("Status changed to: " + e.key);
@@ -120,7 +138,7 @@ const RequestAdmin = () => {
   };
 
   const handleTransaction = (e, record) => {
-    message.info("Trans Change to: "+ e.key);
+    message.info("Trans Change to: " + e.key);
     const { key } = e;
 
     // อัพเดตข้อมูลที่กรอง
@@ -147,7 +165,34 @@ const RequestAdmin = () => {
         updatedOriginalData.find((item) => item.REQ_ID === record.REQ_ID)
       )
     );
-  }
+  };
+
+  //!ต่อ
+  const handleBatchNoSelect = (value) => {
+    setSelectedBatchNo(value);
+    if (value === null || value === "all") {
+      setFormData(originalData);
+    } else {
+      const filteredData = originalData.filter(
+        (item) => item.REQ_BATCHNO === value
+      );
+      setFormData(filteredData);
+    }
+  };
+
+  //!ต่อ
+  const handleGenerateBatchData = () => {
+    const selectedBatchData = formdata.filter((item) =>
+      selectedRowKeys.includes(item.REQ_ID)
+    );
+    console.log(
+      "Selected Batch Data:",
+      selectedBatchData.map((item) => item.REQ_BATCHNO)
+    );
+    // Example: You can process the selectedBatchData as needed (e.g., export to CSV)
+    // For demonstration, logging to console
+    console.log("Processing selected batch data...");
+  };
 
   const columns = [
     {
@@ -179,7 +224,7 @@ const RequestAdmin = () => {
       title: "จำนวนงวด",
       dataIndex: "REQ_INSNUM",
       key: "REQ_INSNUM",
-      align: 'center',
+      align: "center",
     },
     {
       title: "วิธีการส่งชำระ",
@@ -188,6 +233,7 @@ const RequestAdmin = () => {
       render: (value) => (value === 1 ? "ส่งเงินต้นคงที่" : "ส่งแฟลตเรต"),
     },
     {
+      title: "ล้างหนี้",
       title: "ชำระหนี้เดิม",
       dataIndex: "EXIST_LOAN",
       key: "EXIST_LOAN",
@@ -232,7 +278,9 @@ const RequestAdmin = () => {
             <Button>
               <Space>
                 {status === "A" && <Badge status="success" text="อนุมัติ" />}
-                {status === "P" && <Badge status="warning" text="รอดำเนินการ" />}
+                {status === "P" && (
+                  <Badge status="warning" text="รอดำเนินการ" />
+                )}
                 {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
                 <DownOutlined />
               </Space>
@@ -260,6 +308,7 @@ const RequestAdmin = () => {
       title: "Transaction",
       dataIndex: "REQ_TRANS",
       key: "REQ_TRANS",
+      render: (value) => (value === "0" ? "N" : "Y"),
       render: (value, record) => {
         const menu = (
           <Menu onClick={(e) => handleTransaction(e, record)}>
@@ -269,24 +318,45 @@ const RequestAdmin = () => {
         );
         return (
           <Dropdown overlay={menu} trigger={["click"]}>
-          <Button>
-            <Space>
-              {value === "0" && <Badge status="warning" text="N" />}
-              {value === "1" && <Badge status="success" text="Y" />}
-              <DownOutlined />
-            </Space>
-          </Button>
-        </Dropdown>
-        )
-      }
+            <Button>
+              <Space>
+                {value === "0" && <Badge status="warning" text="N" />}
+                {value === "1" && <Badge status="success" text="Y" />}
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
+        );
+      },
     },
   ];
+
   return (
     <AdminPage>
       <div className="datepicker">
         <span>ข้อมูลการยื่นกู้วันที่ </span>
         <DateDisabled onDateSelect={handleDateSelect} />
       </div>
+      <Dropdown
+        overlay={
+          <Menu onClick={({ key }) => handleBatchNoSelect(key)}>
+            <Menu.Item key="all">ทั้งหมด</Menu.Item>
+            {BatchNos.map((batchNo) => (
+              <Menu.Item key={batchNo}>{batchNo}</Menu.Item>
+            ))}
+          </Menu>
+        }
+        trigger={["click"]}
+      >
+        <Button>
+          {selectedBatchNo
+            ? selectedBatchNo === "all"
+              ? "ทั้งหมด"
+              : `Batch No. ${selectedBatchNo}`
+            : "เลือก Batch No."}
+          <DownOutlined />
+        </Button>
+      </Dropdown>
       <Card className="my-card">
         <h4>RequestAdmin</h4>
         <Table
@@ -300,7 +370,9 @@ const RequestAdmin = () => {
       </Card>
       <div className="button">
         <Flex gap="small" wrap="wrap">
-          <Button type="primary" onClick={handleSelect}>ออกเลขชุดข้อมูล</Button>
+          <Button type="primary" onClick={handleGenerateBatchData}>
+            ออกเลขชุดข้อมูล
+          </Button>
           <Button type="primary">สร้างคำขอในระบบ</Button>
           <Button type="primary">ส่งข้อมูลไปรอจ่าย</Button>
           <Button type="primary" onClick={handleGeneratePDF}>
