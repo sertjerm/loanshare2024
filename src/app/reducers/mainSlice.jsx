@@ -79,6 +79,7 @@ const initialState = {
   requestList: { isLoading: false, items: null },
   newloan: { isLoading: false, item: null },
   savedloan:{isLoading:false,item:null},
+  batchList: {isLoading:false,items:null},
 };
 
 const mainSlice = createSlice({
@@ -186,6 +187,21 @@ const mainSlice = createSlice({
       state.newloan.item = action.payload.data;
       //saveState(state); // Save state to localStorage
     },
+    getBatchListRequest(state) {
+      console.log(`batchListRequest${state}`);
+      state.batchList.isLoading = true;
+      state.batchList.items = null;
+      //saveState(state); // Save state to localStorage
+    },
+    getBatchListSuccess(state, action) {
+      state.batchList.isLoading = false;
+      state.batchList.items = action.payload.data;
+      //saveState(state); // Save state to localStorage
+    },
+    getBatchListFailure(state) {
+      state.batchList.isLoading = false;
+      //saveState(state); // Save state to localStorage
+    },
 
   },
 });
@@ -210,6 +226,10 @@ export const {
   savedloanRequest,
   savedloanSuccess,
   savedloanFailure,
+
+  getBatchListRequest,
+  getBatchListSuccess,
+  getBatchListFailure,
 
   newloanUpdate,
 } = mainSlice.actions;

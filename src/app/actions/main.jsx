@@ -24,6 +24,9 @@ import {
   savedloanRequest,
   savedloanSuccess,
   savedloanFailure,
+  getBatchListRequest,
+  getBatchListSuccess,
+  getBatchListFailure,
 } from "../reducers/mainSlice";
 import { useDispatch } from "react-redux";
 // import axios from "axios";
@@ -361,4 +364,44 @@ export const DeleteRequest = (req_id) => {
   //   .catch((error) => {
   //     console.log(error);
   //   });
+};
+
+// ฟังก์ชันสำหรับการ UpdateLoanRequest
+export const CreateBatchId = (data) => {
+  console.log("CreateBatchId", JSON.stringify(data));
+
+  // ตั้งค่า config สำหรับคำขอ HTTP POST
+  var config = {
+    method: "post",
+    url: `${SERVICE_URL}/CreateBatchId`, // ใช้ Template Literal สำหรับ URL
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(data), // แปลงข้อมูลเป็น JSON string
+  };
+
+  return async (dispatch) => {
+    dispatch(getBatchListRequest()); // Dispatch action เพื่อเริ่มการ login
+
+    try {
+      // ส่งคำขอ HTTP POST ไปยังเซิร์ฟเวอร์
+      const response = await axios(config);
+      console.log("CreateBatchIdRequest response=", response);
+
+      // ตรวจสอบสถานะการตอบสนองจากเซิร์ฟเวอร์
+      if (response.data.status == 200) {
+        let temp = response.data.data;
+        // let saved_req = response.data.saved_req; // เก็บข้อมูลผู้ใช้จากการตอบสนอง
+        console.log("CreateBatchIdRequest success", temp);
+        dispatch(getBatchListSuccess({ data: temp })); // Dispatch action เมื่อ login สำเร็จ
+      } else {
+        console.log("jwtLogin failed with status:", response.status);
+        dispatch(getBatchListFailure()); // Dispatch action เมื่อ login ล้มเหลว
+      }
+    } catch (error) {
+      // จัดการข้อยกเว้นที่อาจเกิดขึ้น
+      console.log("CreateBatchIdRequest error:", error);
+      dispatch(getBatchListFailure()); // Dispatch action เมื่อ login ล้มเหลว
+    }
+  };
 };

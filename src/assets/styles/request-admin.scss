@@ -19,7 +19,7 @@
 
 }
 
-.ant-btn {
+.btn-status .ant-btn{
     width: 150px;
     // border: 2px solid red;
 }
@@ -30,4 +30,20 @@
 
 .ant-table-row:nth-child(odd) {
     background-color: #ffffff; /* สีพื้นหลังสำหรับแถวคี่ */
+}
+
+.filter-status {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    margin-right: 24px; /* ระยะขอบขวา */
+}
+
+.filter-status .ant-radio-group {
+    margin-left: 10px; /* ระยะห่างระหว่าง Radio Group กับปุ่ม Dropdown */
+}
+
+.disabled-row {
+    pointer-events: none; /* ไม่อนุญาตให้แถวนี้สามารถคลิกได้ */
+    background-color: #f2f2f2; /* สีพื้นหลังของแถวที่ disable */
 }

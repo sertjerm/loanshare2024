@@ -15,6 +15,7 @@ import {
   message,
   DatePicker,
   Select,
+  Radio,
 } from "antd";
 import moment from "moment";
 import { render } from "react-dom";
@@ -23,6 +24,8 @@ import { DownOutlined } from "@ant-design/icons";
 import "../assets/styles/request-admin.scss";
 import { NumericFormat } from "react-number-format";
 import DateDisabled from "../components/custom/DateDisabled";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const RequestAdmin = () => {
   const dispatch = useDispatch();
@@ -35,6 +38,8 @@ const RequestAdmin = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [BatchNos, setBatchNos] = useState([]);
   const [selectedBatchNo, setSelectedBatchNo] = useState(null);
+  const [disabledRowKeys, setDisabledRowKeys] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("all"); // State สำหรับเก็บสถานะที่เลือกในการกรอง
 
   useEffect(() => {
     dispatch(actions.GetLoanRequests());
@@ -45,7 +50,7 @@ const RequestAdmin = () => {
   //   setOriginalData(data);
   // }, [data]);
 
-  //!ต่อ
+  //!GPT 
   useEffect(() => {
     if (data) {
       setFormData(data);
@@ -74,21 +79,14 @@ const RequestAdmin = () => {
         message.success("เลือก row แล้ว");
       }
       setSelectedRowKeys(newSelectedRowKeys);
-
-      const updatedFormDataList = formdata.map((item) => {
-        if (newSelectedRowKeys.includes(item.REQ_ID)) {
-          return { ...item, IS_SELECT: true };
-        } else {
-          return { ...item, IS_SELECT: false };
-        }
-      });
-      setFormData(updatedFormDataList);
     },
+    getCheckboxProps: (record) => ({
+      disabled:
+        selectedBatchNo &&
+        selectedBatchNo !== "all" &&
+        disabledRowKeys.includes(record.REQ_ID),
+    }),
   };
-
-  // const handleSelect = () => {
-  //   console.log("===Selected===",selectedRowKeys);
-  // }
 
   const handleStatusClick = (e, record) => {
     message.info("Status changed to: " + e.key);
@@ -167,31 +165,57 @@ const RequestAdmin = () => {
     );
   };
 
-  //!ต่อ
+  //เพื่อให้ตรวจสอบแถวที่มีสถานะเป็น "รอดำเนินการ" หรือ "ไม่อนุมัติ"
   const handleBatchNoSelect = (value) => {
     setSelectedBatchNo(value);
     if (value === null || value === "all") {
       setFormData(originalData);
+      setDisabledRowKeys([]);
     } else {
       const filteredData = originalData.filter(
         (item) => item.REQ_BATCHNO === value
       );
       setFormData(filteredData);
+
+      // ตรวจสอบแถวที่ disable
+      const disabledKeys = filteredData
+        .filter((item) => item.REQ_STATUS === "P" || item.REQ_STATUS === "D")
+        .map((item) => item.REQ_ID);
+      setDisabledRowKeys(disabledKeys);
     }
   };
 
-  //!ต่อ
   const handleGenerateBatchData = () => {
-    const selectedBatchData = formdata.filter((item) =>
-      selectedRowKeys.includes(item.REQ_ID)
+    const selectedBatchData = formdata.filter(
+      (item) => selectedRowKeys.includes(item.REQ_ID)
     );
-    console.log(
-      "Selected Batch Data:",
-      selectedBatchData.map((item) => item.REQ_BATCHNO)
+    console.log("Selected Batch Data for CreateBatchId:", selectedBatchData);
+  
+    const hasInvalidStatus = selectedBatchData.some(
+      (item) => item.REQ_STATUS !== 'A'
     );
-    // Example: You can process the selectedBatchData as needed (e.g., export to CSV)
-    // For demonstration, logging to console
-    console.log("Processing selected batch data...");
+  
+    if (hasInvalidStatus) {
+      message.warning("ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก");
+    } else if (selectedBatchData.length > 0) {
+      dispatch(actions.CreateBatchId(selectedBatchData.map((item) => item.REQ_BATCHNO)));
+    } else {
+      message.warning("กรุณาเลือกแถวที่มีสถานะเป็น 'อนุมัติ' สำหรับการออกเลขชุดข้อมูล");
+    }
+  };
+
+  const handleFilterStatusChange = (e) => {
+    setFilterStatus(e.target.value);
+
+    // Filter data based on selected status
+    if (e.target.value === "all") {
+      setFormData(originalData);
+    } else {
+      const filteredData = originalData.filter(
+        (item) => item.REQ_STATUS === e.target.value
+      );
+      setFormData(filteredData);
+    }
   };
 
   const columns = [
@@ -274,18 +298,20 @@ const RequestAdmin = () => {
           </Menu>
         );
         return (
-          <Dropdown overlay={menu} trigger={["click"]}>
-            <Button>
-              <Space>
-                {status === "A" && <Badge status="success" text="อนุมัติ" />}
-                {status === "P" && (
-                  <Badge status="warning" text="รอดำเนินการ" />
-                )}
-                {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
-                <DownOutlined />
-              </Space>
-            </Button>
-          </Dropdown>
+          <div className="btn-status">
+            <Dropdown overlay={menu} trigger={["click"]}>
+              <Button>
+                <Space>
+                  {status === "A" && <Badge status="success" text="อนุมัติ" />}
+                  {status === "P" && (
+                    <Badge status="warning" text="รอดำเนินการ" />
+                  )}
+                  {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
+                  <DownOutlined />
+                </Space>
+              </Button>
+            </Dropdown>
+          </div>
         );
       },
     },
@@ -300,15 +326,14 @@ const RequestAdmin = () => {
       key: "USER_ID",
     },
     {
-      title: "Request No.",
-      dataIndex: "REQ_NO",
-      key: "REQ_NO",
+      title: "ReqID",
+      dataIndex: "REQ_ID",
+      key: "REQ_ID",
     },
     {
       title: "Transaction",
       dataIndex: "REQ_TRANS",
       key: "REQ_TRANS",
-      render: (value) => (value === "0" ? "N" : "Y"),
       render: (value, record) => {
         const menu = (
           <Menu onClick={(e) => handleTransaction(e, record)}>
@@ -320,8 +345,7 @@ const RequestAdmin = () => {
           <Dropdown overlay={menu} trigger={["click"]}>
             <Button>
               <Space>
-                {value === "0" && <Badge status="warning" text="N" />}
-                {value === "1" && <Badge status="success" text="Y" />}
+                {value === "0" ? "N" : "Y"}
                 <DownOutlined />
               </Space>
             </Button>
@@ -336,6 +360,15 @@ const RequestAdmin = () => {
       <div className="datepicker">
         <span>ข้อมูลการยื่นกู้วันที่ </span>
         <DateDisabled onDateSelect={handleDateSelect} />
+      </div>
+      <div className="filter-status">
+        <span>สถานะรายการ</span>
+        <Radio.Group value={filterStatus} onChange={handleFilterStatusChange}>
+          <Radio.Button value="all">ทั้งหมด</Radio.Button>
+          <Radio.Button value="A">อนุมัติ</Radio.Button>
+          <Radio.Button value="P">รอดำเนินการ</Radio.Button>
+          <Radio.Button value="D">ไม่อนุมัติ</Radio.Button>
+        </Radio.Group>
       </div>
       <Dropdown
         overlay={
@@ -366,6 +399,7 @@ const RequestAdmin = () => {
           columns={columns}
           rowKey="REQ_ID"
           scroll={{ x: 1500 }}
+          // rowClassName={getRowClassName} // เพิ่ม rowClassName ที่นี่
         />
       </Card>
       <div className="button">
