@@ -303,7 +303,7 @@ const RequestForm = (props) => {
               />{newloan?.PAYMENT_TYPE}
             </Form.Item> */}
 
-            <Form.Item label={`ส่งต่อเดือน`} name="PPM">
+            <Form.Item label={`ส่งต่อเดือนงวดแรกโดยประมาณ`} name="PPM">
               <Typography variant="h4" gutterBottom>
                 <NumericFormat
                   value={newloan?.PPM}
@@ -312,9 +312,9 @@ const RequestForm = (props) => {
                   decimalScale={2}
                 />
               </Typography>
-              {`ต้น=${newloan?.TON.toFixed(2)}-ดอก=${newloan?.DOG.toFixed(2)}`}
+              {/* {`ต้น=${newloan?.TON.toFixed(2)}-ดอก=${newloan?.DOG.toFixed(2)}`} */}
             </Form.Item>
-            <Form.Item
+            {  newloan?.REMAIN < newloan?.MIN_REMAIN &&  <Form.Item
               label={`เงินเหลือรับ (ขั้นต่ำ ${formattedMinRemain})`}
               name="REMAIN"
               rules={[
@@ -328,9 +328,9 @@ const RequestForm = (props) => {
                 }),
               ]}
             >
-              <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom>
                 <NumericFormat
-                  className={
+                className={
                     newloan?.REMAIN < newloan?.MIN_REMAIN ? "text-danger" : ""
                   }
                   value={newloan?.REMAIN}
@@ -339,7 +339,7 @@ const RequestForm = (props) => {
                   decimalScale={2}
                 />
               </Typography>
-            </Form.Item>
+            </Form.Item>}
           </div>
 
           <div className="div-form-control">
@@ -354,13 +354,13 @@ const RequestForm = (props) => {
           </div>
         </Form>
       </Card>
-      <div className="col-12 mt-2">
+      {/* <div className="col-12 mt-2">
         <Card className="my-card mb-2">
           <pre style={{ height: "auto", whiteSpace: "pre-wrap", color: "red" }}>
             {JSON.stringify(newloan, null, 2)}
           </pre>
         </Card>
-      </div>
+      </div> */}
     </GeneralPage>
   );
 };

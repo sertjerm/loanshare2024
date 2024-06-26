@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import Icon from "@ant-design/icons/lib/components/Icon";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import GeneralPage from "./GeneralPage";
+import ScrollableInputNumber from "../components/custom/ScrollableInputNumber";
+import MoneyPicker from "../components/custom/MoneyPicker";
 
 const Login = (props) => {
   let { next, prev, setStep } = props;
@@ -102,6 +104,10 @@ const Login = (props) => {
             </Button>
           </Form.Item>
         </Form>
+      </Card>
+      <Card className="my-card">
+        {/* <ScrollableInputNumber /> */}
+        <MoneyPicker />
       </Card>
     </GeneralPage>
   );
