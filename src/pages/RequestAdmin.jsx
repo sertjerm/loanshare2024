@@ -407,7 +407,7 @@ const RequestAdmin = () => {
       <div className="button">
         <Flex gap="small" wrap="wrap">
           <Button type="primary" onClick={handleGenerateBatchData}>
-            ออกเลขชุดข้อมูล555
+            ออกเลขชุดข้อมูล
           </Button>
           <Button type="primary">สร้างคำขอในระบบ</Button>
           <Button type="primary">ส่งข้อมูลไปรอจ่าย</Button>
