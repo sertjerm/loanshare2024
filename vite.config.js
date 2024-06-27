@@ -4,7 +4,10 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/loan2024/',
+  base: '/loan2024/'
+  // base: '/admin2024/',
+
+
 });
 // export default defineConfig({
 //   base: '/loan2024/',

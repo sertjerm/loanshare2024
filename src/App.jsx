@@ -1,6 +1,6 @@
 // src/App.jsx
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { Button, Layout, Steps, message } from "antd";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -20,13 +20,14 @@ import "aos/dist/aos.css";
 // import "./assets/styles/main-wizard.scss";
 import "./assets/styles/app.scss";
 import Finished from "./pages/Finished";
-import GeneralPage from "./pages/GeneralPage";
+import GeneralPage, { AdminPage } from "./pages/GeneralPage";
 import MemberInfo from "./pages/MemberInfo";
 import Summary from "./pages/Summary";
 import VerifyMember from "./pages/VerifyMember";
 import SitInfo from "./pages/SitInfo";
 import RequestForm2 from "./pages/RequestForm2";
 import { Header } from "antd/es/layout/layout";
+import AdminLogin from "./pages/AdminLogin";
 
 const { Content, Footer } = Layout;
 
@@ -147,6 +148,38 @@ const App = () => {
   // if (!user) {
   //   return <Login next={next} prev={prev} setStep={setStep} />;
   // }
+  // return (
+  //   <Router basename="/loan2024">
+  //     <Layout>
+  //       <Header>
+  //         <div className="app-name">กู้หุ้นออนไลน์ สอ.มก.</div>
+  //       </Header>
+  //       <Content>
+  //         <div className="steps-container">
+  //           <div className="container">
+  //             <Steps
+  //               current={current.index}
+  //               items={items}
+  //               status={current.isError ? "error" : ""}
+  //               onChange={onChangeStep}
+  //               // percent={80}
+  //               // type={window.innerWidth > 500 ? "navigation" : "inline"}
+  //               // type="inline"
+  //               // type="navigation"
+  //               // size="small"
+  //             />
+  //           </div>
+  //           <div className="steps-content">{steps[current.index]?.content}</div>
+  //         </div>
+  //       </Content>
+  //       <Footer style={{ textAlign: "center" }}>
+  //         ฝ่ายเทคโนโลยีสารสนเทศ สอ.มก. @2024
+  //         <br />
+  //         02-589-8864-5
+  //       </Footer>
+  //     </Layout>
+  //   </Router>
+  // );
   return (
     <Router basename="/loan2024">
       <Layout>
@@ -161,17 +194,11 @@ const App = () => {
                 items={items}
                 status={current.isError ? "error" : ""}
                 onChange={onChangeStep}
-                // percent={80}
-                // type={window.innerWidth > 500 ? "navigation" : "inline"}
-                // type="inline"
-                // type="navigation"
-                // size="small"
               />
             </div>
             <div className="steps-content">{steps[current.index]?.content}</div>
           </div>
         </Content>
-
         <Footer style={{ textAlign: "center" }}>
           ฝ่ายเทคโนโลยีสารสนเทศ สอ.มก. @2024
           <br />
