@@ -16,6 +16,7 @@ import {
   DatePicker,
   Select,
   Radio,
+  Checkbox,
 } from "antd";
 import moment from "moment";
 import { render } from "react-dom";
@@ -118,7 +119,7 @@ const RequestAdmin = () => {
 
   const handleGeneratePDF = () => {
     window.open(
-      "https://apps3.coop.ku.ac.th/php/mpdf/maprang/salary/salary_encrypt.php?year=2567&month=05&mbcode=000062"
+      "https://apps3.coop.ku.ac.th/php/mpdf/maprang/salary/report_loan.php"
     );
   };
 
@@ -202,15 +203,14 @@ const RequestAdmin = () => {
     }
   };
 
-  const handleFilterStatusChange = (e) => {
-    setFilterStatus(e.target.value);
+  const handleFilterStatusChange = (checkedValues) => {
+    setFilterStatus(checkedValues);
 
-    // Filter data based on selected status
-    if (e.target.value === "all") {
+    if (checkedValues.includes("all")) {
       setFormData(originalData);
     } else {
       const filteredData = originalData.filter(
-        (item) => item.REQ_STATUS === e.target.value
+        (item) => checkedValues.includes(item.REQ_STATUS)
       );
       setFormData(filteredData);
     }
@@ -361,12 +361,16 @@ const RequestAdmin = () => {
       </div>
       <div className="filter-status">
         <span>สถานะรายการ</span>
-        <Radio.Group value={filterStatus} onChange={handleFilterStatusChange}>
-          <Radio.Button value="all">ทั้งหมด</Radio.Button>
-          <Radio.Button value="A">อนุมัติ</Radio.Button>
-          <Radio.Button value="P">รอดำเนินการ</Radio.Button>
-          <Radio.Button value="D">ไม่อนุมัติ</Radio.Button>
-        </Radio.Group>
+        <Checkbox.Group
+          options={[
+            { label: "ทั้งหมด", value: "all" },
+            { label: "อนุมัติ", value: "A" },
+            { label: "รอดำเนินการ", value: "P" },
+            { label: "ไม่อนุมัติ", value: "D" },
+          ]}
+          value={filterStatus}
+          onChange={handleFilterStatusChange}
+        />
       </div>
       <Dropdown
         overlay={
