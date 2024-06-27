@@ -14,7 +14,6 @@ const AdminLogin = () => {
   return (
     <div>
       <h1>Admin Login</h1>
-      <p>Test</p>
       <Button type="primary" onClick={handleLogin}>Login</Button>
     </div>
   );

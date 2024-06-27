@@ -54,6 +54,7 @@ const RequestAdmin = () => {
     if (data) {
       setFormData(data);
       setOriginalData(data);
+      console.log("============",data);
 
       // Extract distinct BatchNo values
       const distinctBatchNumbers = [

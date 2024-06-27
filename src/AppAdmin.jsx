@@ -9,6 +9,9 @@ import * as actions from "./app/actions/main";
 import UserInfo from "./components/Header/UserInfo";
 import Home from "./pages/Home";
 import Test from "./pages/Test";
+import AdminLogin from "./pages/AdminLogin";
+import { Header } from "antd/es/layout/layout";
+import RequestAdmin from "./pages/RequestAdmin";
 
 const { Content, Footer } = Layout;
 
@@ -20,18 +23,20 @@ const AppAdmin = () => {
   return (
     <Router basename="/admin2024">
       <Layout>
-        {/* {user && <UserInfo />}
-        <MainHeader /> */}
+      <Header>
+          <div className="app-name">กู้หุ้นออนไลน์ สอ.มก.</div>
+        </Header>
         <Content>
-          <div>
+          <div className="container">
             <Routes>
-              <Route path="/" element={<Test2 />} />
+              <Route path="/" element={<AdminLogin />} />
+              {/* <Route path="/admin/dashboard" element={<Test2 />} /> */}
+              <Route path="/admin/dashboard" element={<RequestAdmin />} />
             </Routes>
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Ant Design ©2024 Created by Ant UED
-          test create branch
         </Footer>
       </Layout>
     </Router>
