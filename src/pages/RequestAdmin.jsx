@@ -24,8 +24,6 @@ import { DownOutlined } from "@ant-design/icons";
 import "../assets/styles/request-admin.scss";
 import { NumericFormat } from "react-number-format";
 import DateDisabled from "../components/custom/DateDisabled";
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 
 const RequestAdmin = () => {
   const dispatch = useDispatch();
@@ -257,7 +255,7 @@ const RequestAdmin = () => {
       render: (value) => (value === 1 ? "ส่งเงินต้นคงที่" : "ส่งแฟลตเรต"),
     },
     {
-      title: "ล้างหนี้",
+      // title: "ล้างหนี้",
       title: "ชำระหนี้เดิม",
       dataIndex: "EXIST_LOAN",
       key: "EXIST_LOAN",
