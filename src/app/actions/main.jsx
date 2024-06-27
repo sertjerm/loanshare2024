@@ -24,6 +24,9 @@ import {
   savedloanRequest,
   savedloanSuccess,
   savedloanFailure,
+  getBatchListRequest,
+  getBatchListSuccess,
+  getBatchListFailure,
 } from "../reducers/mainSlice";
 import { useDispatch } from "react-redux";
 // import axios from "axios";
@@ -236,7 +239,8 @@ export const GetLoanRequests = (status) => {
       .get(url, { async: true })
       .then(function (response) {
         data = response.data.data;
-
+        data = data.map((loan) => ({...loan, IS_SELECT: 1})) //เพิ่มฟิลด์ IS_SELECT ให้รายการข้อมูลใน data ด้วยการ map
+        //สร้างอ็อบเจ็กต์ใหม่ที่มีทุกคุณสมบัติของ loan และเพิ่มฟิลด์ x ที่มีค่าเป็น 1 แล้ว return ออกมาเป็น array ใหม่ที่ปรับปรุงแล้วให้กับ data โดยไม่แก้ไขข้อมูลเดิมใน data ตั้งแต่ต้น
         console.log("GetLoanRequests success", data);
         dispatch(getRequestListSuccess({ data: data }));
       })
@@ -267,7 +271,7 @@ export const SaveLoanRequest = (data) => {
     try {
       // ส่งคำขอ HTTP POST ไปยังเซิร์ฟเวอร์
       const response = await axios(config);
-      console.log("SaveLoanRequest response=",response);
+      console.log("SaveLoanRequest response=", response);
 
       // ตรวจสอบสถานะการตอบสนองจากเซิร์ฟเวอร์
       if (response.data.status == 200) {
@@ -282,6 +286,122 @@ export const SaveLoanRequest = (data) => {
       // จัดการข้อยกเว้นที่อาจเกิดขึ้น
       console.log("SaveLoanRequest error:", error);
       dispatch(savedloanFailure()); // Dispatch action เมื่อ login ล้มเหลว
+    }
+  };
+};
+
+// ฟังก์ชันสำหรับการ UpdateLoanRequest
+export const UpdateLoanRequest = (data) => {
+  console.log("UpdateLoanRequest", JSON.stringify(data));
+
+  // ตั้งค่า config สำหรับคำขอ HTTP POST
+  var config = {
+    method: "post",
+    url: `${SERVICE_URL}/UpdateLoanRequest`, // ใช้ Template Literal สำหรับ URL
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(data), // แปลงข้อมูลเป็น JSON string
+  };
+
+  return async (dispatch) => {
+    dispatch(savedloanRequest()); // Dispatch action เพื่อเริ่มการ login
+
+    try {
+      // ส่งคำขอ HTTP POST ไปยังเซิร์ฟเวอร์
+      const response = await axios(config);
+      console.log("UpdateLoanRequest response=", response);
+
+      // ตรวจสอบสถานะการตอบสนองจากเซิร์ฟเวอร์
+      if (response.data.status == 200) {
+        let saved_req = response.data.saved_req; // เก็บข้อมูลผู้ใช้จากการตอบสนอง
+        console.log("UpdateLoanRequest success", saved_req);
+        dispatch(savedloanSuccess({ data: saved_req })); // Dispatch action เมื่อ login สำเร็จ
+      } else {
+        console.log("jwtLogin failed with status:", response.status);
+        dispatch(savedloanFailure()); // Dispatch action เมื่อ login ล้มเหลว
+      }
+    } catch (error) {
+      // จัดการข้อยกเว้นที่อาจเกิดขึ้น
+      console.log("UpdateLoanRequest error:", error);
+      dispatch(savedloanFailure()); // Dispatch action เมื่อ login ล้มเหลว
+    }
+  };
+};
+
+export const DeleteRequest = (req_id) => {
+  console.log(`DeleteRequest ${req_id}`);
+  let  url= `${SERVICE_URL}/DeleteRequest?req_id=${req_id}`
+  return async (dispatch) => {
+    dispatch(loginRequest());
+    let data = null;
+    await axios
+      .get(url)
+      .then(function (response) {
+        data = response.data;
+
+        console.log("DeleteRequest success", data);
+        dispatch(loginFailure());
+      })
+      .catch(function (ex) {
+        console.log(" DeleteRequest error : ", ex);
+        dispatch(loginFailure());
+      });
+  };
+  // let config = {
+  //   method: "get",
+  //   maxBodyLength: Infinity,
+  //   url:
+  //    SERVICE_URL+ "DeleteRequest?req_id=" +
+  //     req_id
+  // };
+
+  // axios
+  //   .request(config)
+  //   .then((response) => {
+  //     console.log(response.data);
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+};
+
+// ฟังก์ชันสำหรับการ UpdateLoanRequest
+export const CreateBatchId = (data) => {
+  console.log("CreateBatchId", JSON.stringify(data));
+
+  // ตั้งค่า config สำหรับคำขอ HTTP POST
+  var config = {
+    method: "post",
+    url: `${SERVICE_URL}/CreateBatchId`, // ใช้ Template Literal สำหรับ URL
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(data), // แปลงข้อมูลเป็น JSON string
+  };
+
+  return async (dispatch) => {
+    dispatch(getBatchListRequest()); // Dispatch action เพื่อเริ่มการ login
+
+    try {
+      // ส่งคำขอ HTTP POST ไปยังเซิร์ฟเวอร์
+      const response = await axios(config);
+      console.log("CreateBatchIdRequest response=", response);
+
+      // ตรวจสอบสถานะการตอบสนองจากเซิร์ฟเวอร์
+      if (response.data.status == 200) {
+        let temp = response.data.data;
+        // let saved_req = response.data.saved_req; // เก็บข้อมูลผู้ใช้จากการตอบสนอง
+        console.log("CreateBatchIdRequest success", temp);
+        dispatch(getBatchListSuccess({ data: temp })); // Dispatch action เมื่อ login สำเร็จ
+      } else {
+        console.log("jwtLogin failed with status:", response.status);
+        dispatch(getBatchListFailure()); // Dispatch action เมื่อ login ล้มเหลว
+      }
+    } catch (error) {
+      // จัดการข้อยกเว้นที่อาจเกิดขึ้น
+      console.log("CreateBatchIdRequest error:", error);
+      dispatch(getBatchListFailure()); // Dispatch action เมื่อ login ล้มเหลว
     }
   };
 };

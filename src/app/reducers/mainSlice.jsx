@@ -79,6 +79,7 @@ const initialState = {
   requestList: { isLoading: false, items: null },
   newloan: { isLoading: false, item: null },
   savedloan:{isLoading:false,item:null},
+  batchList: {isLoading:false,items:null},
 };
 
 const mainSlice = createSlice({
@@ -164,12 +165,44 @@ const mainSlice = createSlice({
       state.savedloan.isLoading = false;
       //saveState(state); // Save state to localStorage
     },
+    // updateloanRequest(state) {
+    //   console.log("updateloanRequest", state);
+    //   state.updateloan.isLoading = true;
+    //   state.updateloan.item = null;
+    //   //saveState(state); // Save state to localStorage
+    // },
+    // updateloanSuccess(state, action) {
+    //   console.log("updateloanSuccess action ,state=", action, state);
+    //   state.updateloan.isLoading = false;
+    //   state.updateloan.item = action.payload.data;
+    //   //saveState(state); // Save state to localStorage
+    // },
+    // updateloanFailure(state) {
+    //   state.updateloan.isLoading = false;
+    //   //saveState(state); // Save state to localStorage
+    // },
     newloanUpdate(state, action) {
       console.log("newloanUpdate action ,state=", action, state);
       state.newloan.isLoading = false;
       state.newloan.item = action.payload.data;
       //saveState(state); // Save state to localStorage
     },
+    getBatchListRequest(state) {
+      console.log(`batchListRequest${state}`);
+      state.batchList.isLoading = true;
+      state.batchList.items = null;
+      //saveState(state); // Save state to localStorage
+    },
+    getBatchListSuccess(state, action) {
+      state.batchList.isLoading = false;
+      state.batchList.items = action.payload.data;
+      //saveState(state); // Save state to localStorage
+    },
+    getBatchListFailure(state) {
+      state.batchList.isLoading = false;
+      //saveState(state); // Save state to localStorage
+    },
+
   },
 });
 
@@ -193,6 +226,10 @@ export const {
   savedloanRequest,
   savedloanSuccess,
   savedloanFailure,
+
+  getBatchListRequest,
+  getBatchListSuccess,
+  getBatchListFailure,
 
   newloanUpdate,
 } = mainSlice.actions;

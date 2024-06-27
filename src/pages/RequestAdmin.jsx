@@ -3,11 +3,28 @@ import { useDispatch, useSelector } from "react-redux";
 import MyLoader from "../components/custom/MyLoader";
 import * as actions from "../app/actions/main";
 import GeneralPage, { AdminPage } from "./GeneralPage";
-import { Card, Flex, Table, Button, Menu, Dropdown, Space, Badge } from "antd";
+import {
+  Card,
+  Flex,
+  Table,
+  Button,
+  Menu,
+  Dropdown,
+  Space,
+  Badge,
+  message,
+  DatePicker,
+  Select,
+  Radio,
+  Checkbox,
+} from "antd";
 import moment from "moment";
 import { render } from "react-dom";
 import { formatDateInThai } from "../app/jsUtils/thaiMoment.js";
 import { DownOutlined } from "@ant-design/icons";
+import "../assets/styles/request-admin.scss";
+import { NumericFormat } from "react-number-format";
+import DateDisabled from "../components/custom/DateDisabled";
 
 const RequestAdmin = () => {
   const dispatch = useDispatch();
@@ -16,35 +33,187 @@ const RequestAdmin = () => {
   );
   const { item: savedloan } = useSelector((state) => state.main.savedloan);
   const [formdata, setFormData] = useState(null);
+  const [originalData, setOriginalData] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [BatchNos, setBatchNos] = useState([]);
+  const [selectedBatchNo, setSelectedBatchNo] = useState(null);
+  const [disabledRowKeys, setDisabledRowKeys] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("all"); // State สำหรับเก็บสถานะที่เลือกในการกรอง
 
   useEffect(() => {
     dispatch(actions.GetLoanRequests());
   }, []);
 
+  // useEffect(() => {
+  //   setFormData(data);
+  //   setOriginalData(data);
+  // }, [data]);
+
+  //!GPT 
   useEffect(() => {
-    setFormData(data);
-  },[data]);
+    if (data) {
+      setFormData(data);
+      setOriginalData(data);
+
+      // Extract distinct BatchNo values
+      const distinctBatchNumbers = [
+        ...new Set(data.map((item) => item.REQ_BATCHNO)),
+      ];
+      setBatchNos(distinctBatchNumbers);
+    }
+  }, [data]);
 
   if (isLoading) {
     return <MyLoader />;
   }
 
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys, selectedRows) => {
+      if (newSelectedRowKeys.length === 0) {
+        message.error("ยกเลิก");
+      } else if (selectedRowKeys.length > newSelectedRowKeys.length) {
+        message.error("ยกเลิก");
+      } else {
+        message.success("เลือก row แล้ว");
+      }
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+    getCheckboxProps: (record) => ({
+      disabled:
+        selectedBatchNo &&
+        selectedBatchNo !== "all" &&
+        disabledRowKeys.includes(record.REQ_ID),
+    }),
+  };
+
   const handleStatusClick = (e, record) => {
+    message.info("Status changed to: " + e.key);
     const { key } = e;
-    const updatedData = data.map(item => {
+
+    // อัพเดตข้อมูลที่กรอง
+    const updatedFormData = formdata.map((item) => {
       if (item.REQ_ID === record.REQ_ID) {
         return { ...item, REQ_STATUS: key };
       }
       return item;
     });
-    // Update the state with the new array
-    setFormData(updatedData);
-    // Dispatch the action with the updated data
-    dispatch(actions.SaveLoanRequest(updatedData.find(item => item.REQ_ID === record.REQ_ID)));
+    setFormData(updatedFormData);
+
+    // อัพเดตข้อมูลดั้งเดิม
+    const updatedOriginalData = originalData.map((item) => {
+      if (item.REQ_ID === record.REQ_ID) {
+        return { ...item, REQ_STATUS: key };
+      }
+      return item;
+    });
+    setOriginalData(updatedOriginalData);
+
+    // ส่งข้อมูลที่อัพเดตไปยัง Redux
+    dispatch(
+      actions.UpdateLoanRequest(
+        updatedOriginalData.find((item) => item.REQ_ID === record.REQ_ID)
+      )
+    );
   };
 
   const handleGeneratePDF = () => {
-    window.open("https://apps3.coop.ku.ac.th/php/mpdf/maprang/salary/salary_encrypt.php?year=2567&month=05&mbcode=000062");
+    window.open(
+      "https://apps3.coop.ku.ac.th/php/mpdf/maprang/salary/report_loan.php"
+    );
+  };
+
+  const handleDateSelect = (date) => {
+    if (date) {
+      const filteredData = originalData.filter((item) =>
+        moment(item.REQ_DATE).isSame(date, "day")
+      );
+      setFormData(filteredData);
+    } else {
+      setFormData(originalData);
+    }
+  };
+
+  const handleTransaction = (e, record) => {
+    message.info("Trans Change to: " + e.key);
+    const { key } = e;
+
+    // อัพเดตข้อมูลที่กรอง
+    const updatedFormData = formdata.map((item) => {
+      if (item.REQ_ID === record.REQ_ID) {
+        return { ...item, REQ_TRANS: key };
+      }
+      return item;
+    });
+    setFormData(updatedFormData);
+
+    // อัพเดตข้อมูลดั้งเดิม
+    const updatedOriginalData = originalData.map((item) => {
+      if (item.REQ_ID === record.REQ_ID) {
+        return { ...item, REQ_TRANS: key };
+      }
+      return item;
+    });
+    setOriginalData(updatedOriginalData);
+
+    // ส่งข้อมูลที่อัพเดตไปยัง Redux
+    dispatch(
+      actions.UpdateLoanRequest(
+        updatedOriginalData.find((item) => item.REQ_ID === record.REQ_ID)
+      )
+    );
+  };
+
+  //เพื่อให้ตรวจสอบแถวที่มีสถานะเป็น "รอดำเนินการ" หรือ "ไม่อนุมัติ"
+  const handleBatchNoSelect = (value) => {
+    setSelectedBatchNo(value);
+    if (value === null || value === "all") {
+      setFormData(originalData);
+      setDisabledRowKeys([]);
+    } else {
+      const filteredData = originalData.filter(
+        (item) => item.REQ_BATCHNO === value
+      );
+      setFormData(filteredData);
+
+      // ตรวจสอบแถวที่ disable
+      const disabledKeys = filteredData
+        .filter((item) => item.REQ_STATUS === "P" || item.REQ_STATUS === "D")
+        .map((item) => item.REQ_ID);
+      setDisabledRowKeys(disabledKeys);
+    }
+  };
+
+  const handleGenerateBatchData = () => {
+    const selectedBatchData = formdata.filter(
+      (item) => selectedRowKeys.includes(item.REQ_ID)
+    );
+    console.log("Selected Batch Data for CreateBatchId:", selectedBatchData);
+  
+    const hasInvalidStatus = selectedBatchData.some(
+      (item) => item.REQ_STATUS !== 'A'
+    );
+  
+    if (hasInvalidStatus) {
+      message.warning("ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก");
+    } else if (selectedBatchData.length > 0) {
+      dispatch(actions.CreateBatchId(selectedBatchData.map((item) => item.REQ_BATCHNO)));
+    } else {
+      message.warning("กรุณาเลือกแถวที่มีสถานะเป็น 'อนุมัติ' สำหรับการออกเลขชุดข้อมูล");
+    }
+  };
+
+  const handleFilterStatusChange = (checkedValues) => {
+    setFilterStatus(checkedValues);
+
+    if (checkedValues.includes("all")) {
+      setFormData(originalData);
+    } else {
+      const filteredData = originalData.filter(
+        (item) => checkedValues.includes(item.REQ_STATUS)
+      );
+      setFormData(filteredData);
+    }
   };
 
   const columns = [
@@ -55,7 +224,7 @@ const RequestAdmin = () => {
       render: (text) => formatDateInThai(text),
     },
     {
-      title: "ชื่อ-นามสกุล",
+      title: "ชื่อ-นามสกุลผู้กู้",
       dataIndex: "FULLNAME",
       key: "FULLNAME",
     },
@@ -63,11 +232,21 @@ const RequestAdmin = () => {
       title: "ยอดเงินกู้",
       dataIndex: "REQ_AMT",
       key: "REQ_AMT",
+      render: (cell, row) => (
+        <div className="number">
+          <NumericFormat
+            value={row.REQ_AMT}
+            displayType={"text"}
+            thousandSeparator={true}
+          />
+        </div>
+      ),
     },
     {
       title: "จำนวนงวด",
       dataIndex: "REQ_INSNUM",
       key: "REQ_INSNUM",
+      align: "center",
     },
     {
       title: "วิธีการส่งชำระ",
@@ -76,9 +255,33 @@ const RequestAdmin = () => {
       render: (value) => (value === 1 ? "ส่งเงินต้นคงที่" : "ส่งแฟลตเรต"),
     },
     {
+      // title: "ล้างหนี้",
+      title: "ชำระหนี้เดิม",
+      dataIndex: "EXIST_LOAN",
+      key: "EXIST_LOAN",
+      render: (cell, row) => (
+        <div className="number">
+          <NumericFormat
+            value={row.EXIST_LOAN}
+            displayType={"text"}
+            thousandSeparator={true}
+          />
+        </div>
+      ),
+    },
+    {
       title: "เหลือรับ",
       dataIndex: "REQ_REMAIN",
       key: "REQ_REMAIN",
+      render: (cell, row) => (
+        <div className="number">
+          <NumericFormat
+            value={row.REQ_REMAIN}
+            displayType={"text"}
+            thousandSeparator={true}
+          />
+        </div>
+      ),
     },
     {
       title: "สถานะรายการ",
@@ -93,18 +296,22 @@ const RequestAdmin = () => {
           </Menu>
         );
         return (
-          <Dropdown overlay={menu} trigger={["click"]}>
-            <Button>
-              <Space>
-                {status === "A" && <Badge status="success" text="อนุมัติ" />}
-                {status === "P" && <Badge status="warning" text="รอดำเนินการ" />}
-                {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
-                <DownOutlined />
-              </Space>
-            </Button>
-          </Dropdown>
-        )
-      }
+          <div className="btn-status">
+            <Dropdown overlay={menu} trigger={["click"]}>
+              <Button>
+                <Space>
+                  {status === "A" && <Badge status="success" text="อนุมัติ" />}
+                  {status === "P" && (
+                    <Badge status="warning" text="รอดำเนินการ" />
+                  )}
+                  {status === "D" && <Badge status="error" text="ไม่อนุมัติ" />}
+                  <DownOutlined />
+                </Space>
+              </Button>
+            </Dropdown>
+          </div>
+        );
+      },
     },
     {
       title: "Batch No.",
@@ -117,33 +324,96 @@ const RequestAdmin = () => {
       key: "USER_ID",
     },
     {
-      title: "Request No.",
-      dataIndex: "REQ_NO",
-      key: "REQ_NO",
+      title: "ReqID",
+      dataIndex: "REQ_ID",
+      key: "REQ_ID",
     },
     {
       title: "Transaction",
       dataIndex: "REQ_TRANS",
       key: "REQ_TRANS",
-      render: (value) => (value === "0" ? "N" : "Y"),
+      render: (value, record) => {
+        const menu = (
+          <Menu onClick={(e) => handleTransaction(e, record)}>
+            <Menu.Item key="0">N</Menu.Item>
+            <Menu.Item key="1">Y</Menu.Item>
+          </Menu>
+        );
+        return (
+          <Dropdown overlay={menu} trigger={["click"]}>
+            <Button>
+              <Space>
+                {value === "0" ? "N" : "Y"}
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
+        );
+      },
     },
   ];
+
   return (
     <AdminPage>
+      <div className="datepicker">
+        <span>ข้อมูลการยื่นกู้วันที่ </span>
+        <DateDisabled onDateSelect={handleDateSelect} />
+      </div>
+      <div className="filter-status">
+        <span>สถานะรายการ</span>
+        <Checkbox.Group
+          options={[
+            { label: "ทั้งหมด", value: "all" },
+            { label: "อนุมัติ", value: "A" },
+            { label: "รอดำเนินการ", value: "P" },
+            { label: "ไม่อนุมัติ", value: "D" },
+          ]}
+          value={filterStatus}
+          onChange={handleFilterStatusChange}
+        />
+      </div>
+      <Dropdown
+        overlay={
+          <Menu onClick={({ key }) => handleBatchNoSelect(key)}>
+            <Menu.Item key="all">ทั้งหมด</Menu.Item>
+            {BatchNos.map((batchNo) => (
+              <Menu.Item key={batchNo}>{batchNo}</Menu.Item>
+            ))}
+          </Menu>
+        }
+        trigger={["click"]}
+      >
+        <Button>
+          {selectedBatchNo
+            ? selectedBatchNo === "all"
+              ? "ทั้งหมด"
+              : `Batch No. ${selectedBatchNo}`
+            : "เลือก Batch No."}
+          <DownOutlined />
+        </Button>
+      </Dropdown>
       <Card className="my-card">
         <h4>RequestAdmin</h4>
         <Table
-          dataSource={data}
+          rowSelection={rowSelection}
+          // dataSource={data}
+          dataSource={formdata}
           columns={columns}
           rowKey="REQ_ID"
           scroll={{ x: 1500 }}
+          // rowClassName={getRowClassName} // เพิ่ม rowClassName ที่นี่
         />
       </Card>
-      <div>
+      <div className="button">
         <Flex gap="small" wrap="wrap">
-        <Button type="primary" onClick={handleGeneratePDF}>
-              ออกรายงานส่งการเงิน
-        </Button>
+          <Button type="primary" onClick={handleGenerateBatchData}>
+            ออกเลขชุดข้อมูล
+          </Button>
+          <Button type="primary">สร้างคำขอในระบบ</Button>
+          <Button type="primary">ส่งข้อมูลไปรอจ่าย</Button>
+          <Button type="primary" onClick={handleGeneratePDF}>
+            ออกรายงานส่งการเงิน
+          </Button>
         </Flex>
       </div>
     </AdminPage>

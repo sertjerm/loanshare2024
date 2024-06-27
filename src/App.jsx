@@ -17,13 +17,16 @@ import RequestAdmin from "./pages/RequestAdmin";
 import AfterLogin from "./pages/AfterLogin";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import "./assets/styles/main-wizard.scss";
+// import "./assets/styles/main-wizard.scss";
+import "./assets/styles/app.scss";
 import Finished from "./pages/Finished";
 import GeneralPage from "./pages/GeneralPage";
 import MemberInfo from "./pages/MemberInfo";
 import Summary from "./pages/Summary";
 import VerifyMember from "./pages/VerifyMember";
 import SitInfo from "./pages/SitInfo";
+import RequestForm2 from "./pages/RequestForm2";
+import { Header } from "antd/es/layout/layout";
 
 const { Content, Footer } = Layout;
 
@@ -68,10 +71,10 @@ const App = () => {
   // message.info(current);
   var steps = [
     // {
-    //   key: 1,
-    //   title: "login",
+    //   key: 0,
+    //   title: "test",
     //   subTitle: "subTitle1",
-    //   content: <Login next={next} prev={prev} setStep={setStep} />,
+    //   content: <RequestAdmin next={next} prev={prev} setStep={setStep} />,
     //   disabled: "0",
     //   description: "description1",
     // },
@@ -79,10 +82,18 @@ const App = () => {
       key: 1,
       title: "login",
       subTitle: "subTitle1",
-      content: <RequestAdmin next={next} prev={prev} setStep={setStep} />,
+      content: <Login next={next} prev={prev} setStep={setStep} />,
       disabled: "0",
       description: "description1",
     },
+    // {
+    //   key: 1,
+    //   title: "login",
+    //   subTitle: "subTitle1",
+    //   content: <RequestAdmin next={next} prev={prev} setStep={setStep} />,
+    //   disabled: "0",
+    //   description: "description1",
+    // },
     {
       key: 2,
       title: "ตรวจสอบสิทธิ์",
@@ -116,7 +127,12 @@ const App = () => {
       title: "Admin",
       subTitle: "subTitle4",
       content: (
-        <RequestAdmin next={next} prev={prev} setStep={setStep} SignOut={SignOut} />
+        <RequestAdmin
+          next={next}
+          prev={prev}
+          setStep={setStep}
+          SignOut={SignOut}
+        />
       ),
       disabled: "1",
       description: "description4",
@@ -134,24 +150,28 @@ const App = () => {
   return (
     <Router basename="/loan2024">
       <Layout>
-        {/* {user && <UserInfo SignOut={SignOut} />} */}
-
+        <Header>
+          <div className="app-name">กู้หุ้นออนไลน์ สอ.มก.</div>
+        </Header>
         <Content>
-          <div className="main-wiz container-fluid">
-            <Steps
-              current={current.index}
-              items={items}
-              status={current.isError ? "error" : ""}
-              onChange={onChangeStep}
-              // percent={80}
-              type="navigation"
-              // type="inline"
-              // size="small"
-            />
-
+          <div className="steps-container">
+            <div className="container">
+              <Steps
+                current={current.index}
+                items={items}
+                status={current.isError ? "error" : ""}
+                onChange={onChangeStep}
+                // percent={80}
+                // type={window.innerWidth > 500 ? "navigation" : "inline"}
+                // type="inline"
+                // type="navigation"
+                // size="small"
+              />
+            </div>
             <div className="steps-content">{steps[current.index]?.content}</div>
           </div>
         </Content>
+
         <Footer style={{ textAlign: "center" }}>
           ฝ่ายเทคโนโลยีสารสนเทศ สอ.มก. @2024
           <br />
@@ -160,61 +180,6 @@ const App = () => {
       </Layout>
     </Router>
   );
-  // return <Wizard />;
 };
 
 export default App;
-
-// var steps = [
-//   {
-//     key: 1,
-//     title: "login",
-//     subTitle: "subTitle1",
-//     content: <Login next={next} prev={prev} setStep={setStep} />,
-//     disabled: "0",
-//     description: "description1",
-//   },
-//   {
-//     key: 2,
-//     title: "ตรวจสอบสิทธิ์",
-//     subTitle: "subTitle2",
-//     content: (
-//       <AfterLogin
-//         next={next}
-//         prev={prev}
-//         SignOut={SignOut}
-//         setStep={setStep}
-//       />
-//     ),
-//     disabled: "0",
-//     description: "description2",
-//   },
-//   {
-//     key: 3,
-//     title: "คำนวณเงินกู้ใหม่",
-//     subTitle: "subTitle3",
-//     content: <RequestForm next={next} prev={prev} setStep={setStep} />,
-//     disabled: "0",
-//     description: "description3",
-//   },
-//   // {
-//   //   key: 3,
-//   //   title: "report",
-//   //   subTitle: "subTitle1",
-//   //   content: (
-//   //     <GeneralPage>
-//   //       <div>Report</div>
-//   //     </GeneralPage>
-//   //   ),
-//   //   disabled: "0",
-//   //   description: "description1",
-//   // },
-//   {
-//     key: 4,
-//     title: "Finished",
-//     subTitle: "subTitle4",
-//     content: <Finished next={next} prev={prev} setStep={setStep} />,
-//     disabled: "1",
-//     description: "description4",
-//   },
-// ];

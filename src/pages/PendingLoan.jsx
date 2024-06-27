@@ -9,6 +9,7 @@ const PendingLoan = (props) => {
   if (textMode === true) {
     return <div className="text-success">{display_date}</div>;
   }
+  
   return (
     <p>
       <Alert message={display_date} type={"info"} showIcon />
