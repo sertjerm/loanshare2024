@@ -26,12 +26,10 @@ export const AdminPage = (props) => {
     <div className="container-fluid general-page ">
       <div className="row">
         <div
-          className="col-12 "
+          className="col-12"
           // data-aos="fade-up" data-aos-delay="300"
         >
-          <div className="col-12 pt-2">
-            {props.children}
-          </div>
+          <div className="col-12 pt-2">{props.children}</div>
         </div>
       </div>
     </div>

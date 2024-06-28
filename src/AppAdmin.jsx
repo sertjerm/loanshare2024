@@ -1,9 +1,15 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { Layout } from "antd";
 import { useEffect } from "react";
 import { Header } from "antd/es/layout/layout";
 import AdminLogin from "./pages/AdminLogin";
 import RequestAdmin from "./pages/RequestAdmin";
+import { AdminPage } from "./pages/GeneralPage";
 
 const { Content, Footer } = Layout;
 
@@ -29,14 +35,12 @@ const AppContent = () => {
         <div className="app-name">กู้หุ้นออนไลน์ สอ.มก.</div>
       </Header>
       <Content>
-        <div className="container">
+        <AdminPage>
           <Routes>
             <Route path="/" element={<AdminLogin />} />
-            {/* <Route path="/admin/dashboard" element={<Test2 />} /> */}
             <Route path="/request-admin" element={<RequestAdmin />} />
-            {/* <Route path="/admin/dashboard/" element={<AdminDashboard />} /> */}
           </Routes>
-        </div>
+        </AdminPage>
       </Content>
       <Footer style={{ textAlign: "center" }}>
         Ant Design ©2024 Created by Ant UED

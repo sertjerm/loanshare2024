@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
+import { useDispatch } from 'react-redux';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -9,7 +10,6 @@ const AdminLogin = () => {
   const handleLogin = () => {
     // Implement login logic here
     navigate('/request-admin'); // Change this to your desired route after login
-    // navigate('/admin/dashboard/'); // Change this to your desired route after login
   };
 
   return (

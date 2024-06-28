@@ -367,7 +367,7 @@ const RequestAdmin = () => {
         <DateDisabled onDateSelect={handleDateSelect} />
       </div>
       <div className="filter-status">
-        <span>สถานะรายการ</span>
+        <span>สถานะรายการ </span>
         <Checkbox.Group
           options={[
             { label: "ทั้งหมด", value: "all" },
