@@ -3,8 +3,9 @@ import {
   Routes,
   Route,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
-import { Layout } from "antd";
+import { Button, Layout } from "antd";
 import { useEffect } from "react";
 import { Header } from "antd/es/layout/layout";
 import AdminLogin from "./pages/AdminLogin";
@@ -23,6 +24,7 @@ const AppAdmin = () => {
 
 const AppContent = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(`Location changed to: ${location.pathname}`);

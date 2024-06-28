@@ -25,9 +25,11 @@ import { DownOutlined } from "@ant-design/icons";
 import "../assets/styles/request-admin.scss";
 import { NumericFormat } from "react-number-format";
 import DateDisabled from "../components/custom/DateDisabled";
+import { useNavigate } from "react-router-dom";
 
 const RequestAdmin = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isLoading, items: data } = useSelector(
     (state) => state.main.requestList
   );
@@ -223,6 +225,11 @@ const RequestAdmin = () => {
     }
   };
 
+  const handleLogout = () => {
+    // dispatch(logout());
+    navigate("/"); // Navigate to the login page after logout
+  };
+
   const columns = [
     {
       title: "วัน-เวลายื่นกู้",
@@ -362,6 +369,7 @@ const RequestAdmin = () => {
 
   return (
     <AdminPage>
+      <Button onClick={handleLogout} style={{ float: 'right' }}>Logout</Button>
       <div className="datepicker">
         <span>ข้อมูลการยื่นกู้วันที่ </span>
         <DateDisabled onDateSelect={handleDateSelect} />
