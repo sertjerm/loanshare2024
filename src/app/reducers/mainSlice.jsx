@@ -80,6 +80,7 @@ const initialState = {
   newloan: { isLoading: false, item: null },
   savedloan:{isLoading:false,item:null},
   batchList: {isLoading:false,items:null},
+  user: { isLoading:false, item:null },
 };
 
 const mainSlice = createSlice({
@@ -202,7 +203,27 @@ const mainSlice = createSlice({
       state.batchList.isLoading = false;
       //saveState(state); // Save state to localStorage
     },
-
+    // loginAdminRequest(state) {
+    //   console.log(`loginRequest${state}`);
+    //   state.user.isLoading = true;
+    //   state.user.item = null;
+    //   saveState(state); // Save state to localStorage
+    // },
+    // loginAdminSuccess(state, action) {
+    //   state.user.isLoading = false;
+    //   state.user.item = action.payload.data;
+    //   saveState(state); // Save state to localStorage
+    // },
+    // loginAdminFailure(state) {
+    //   state.user.isLoading = false;
+    //   saveState(state); // Save state to localStorage
+    // },
+    // logoutAdmin(state) {
+    //   // Clear user data when logging out
+    //   state.user.isLoading = false;
+    //   state.user.item = null;
+    //   saveState(null);
+    // },
   },
 });
 
@@ -230,6 +251,12 @@ export const {
   getBatchListRequest,
   getBatchListSuccess,
   getBatchListFailure,
+
+  loginAdminRequest,
+  loginAdminSuccess,
+  loginAdminFailure,
+
+  logoutAdmin,
 
   newloanUpdate,
 } = mainSlice.actions;

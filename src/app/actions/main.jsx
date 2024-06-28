@@ -27,6 +27,10 @@ import {
   getBatchListRequest,
   getBatchListSuccess,
   getBatchListFailure,
+  loginAdminRequest,
+  loginAdminSuccess,
+  loginAdminFailure,
+  logoutAdmin,
 } from "../reducers/mainSlice";
 import { useDispatch } from "react-redux";
 // import axios from "axios";
