@@ -49,12 +49,12 @@ const RequestAdmin = () => {
   //   setOriginalData(data);
   // }, [data]);
 
-  //!GPT 
+  //!GPT
   useEffect(() => {
     if (data) {
       setFormData(data);
       setOriginalData(data);
-      console.log("============",data);
+      console.log("============", data);
 
       // Extract distinct BatchNo values
       const distinctBatchNumbers = [
@@ -186,21 +186,27 @@ const RequestAdmin = () => {
   };
 
   const handleGenerateBatchData = () => {
-    const selectedBatchData = formdata.filter(
-      (item) => selectedRowKeys.includes(item.REQ_ID)
+    const selectedBatchData = formdata.filter((item) =>
+      selectedRowKeys.includes(item.REQ_ID)
     );
     console.log("Selected Batch Data for CreateBatchId:", selectedBatchData);
-  
+
     const hasInvalidStatus = selectedBatchData.some(
-      (item) => item.REQ_STATUS !== 'A'
+      (item) => item.REQ_STATUS !== "A"
     );
-  
+
     if (hasInvalidStatus) {
-      message.warning("ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก");
+      message.warning(
+        "ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก"
+      );
     } else if (selectedBatchData.length > 0) {
-      dispatch(actions.CreateBatchId(selectedBatchData.map((item) => item.REQ_BATCHNO)));
+      dispatch(
+        actions.CreateBatchId(selectedBatchData.map((item) => item.REQ_BATCHNO))
+      );
     } else {
-      message.warning("กรุณาเลือกแถวที่มีสถานะเป็น 'อนุมัติ' สำหรับการออกเลขชุดข้อมูล");
+      message.warning(
+        "กรุณาเลือกแถวที่มีสถานะเป็น 'อนุมัติ' สำหรับการออกเลขชุดข้อมูล"
+      );
     }
   };
 
@@ -210,8 +216,8 @@ const RequestAdmin = () => {
     if (checkedValues.includes("all")) {
       setFormData(originalData);
     } else {
-      const filteredData = originalData.filter(
-        (item) => checkedValues.includes(item.REQ_STATUS)
+      const filteredData = originalData.filter((item) =>
+        checkedValues.includes(item.REQ_STATUS)
       );
       setFormData(filteredData);
     }

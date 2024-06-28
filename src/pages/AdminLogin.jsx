@@ -8,7 +8,8 @@ const AdminLogin = () => {
 
   const handleLogin = () => {
     // Implement login logic here
-    navigate('/admin/dashboard'); // Change this to your desired route after login
+    navigate('/request-admin'); // Change this to your desired route after login
+    // navigate('/admin/dashboard/'); // Change this to your desired route after login
   };
 
   return (

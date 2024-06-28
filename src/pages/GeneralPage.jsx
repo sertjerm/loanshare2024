@@ -29,7 +29,7 @@ export const AdminPage = (props) => {
           className="col-12 "
           // data-aos="fade-up" data-aos-delay="300"
         >
-          <div className="col-12 pt-2" data-aos="fade-up" data-aos-delay="300">
+          <div className="col-12 pt-2">
             {props.children}
           </div>
         </div>
