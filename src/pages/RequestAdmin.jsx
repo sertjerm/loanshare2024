@@ -172,8 +172,10 @@ const RequestAdmin = () => {
         "ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก"
       );
     } else if (selectedBatchData.length > 0) {
+      // const newBatchNo = Date.now().toString(); // Generate a unique batch number
+      const now = new Date();
+      const newBatchNo = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
       // Optimistically update the state
-      const newBatchNo = Date.now().toString(); // Generate a unique batch number
       const updatedFormData = formdata.map((item) => {
         if (selectedRowKeys.includes(item.REQ_ID)) {
           return { ...item, REQ_BATCHNO: newBatchNo };
@@ -204,43 +206,6 @@ const RequestAdmin = () => {
       );
     }
   };
-  
-
-  // const handleGenerateBatchData = () => {
-  //   const selectedBatchData = formdata.filter((item) =>
-  //     selectedRowKeys.includes(item.REQ_ID)
-  //   );
-  //   console.log("Selected Batch Data for CreateBatchId:", selectedBatchData);
-  
-  //   const hasInvalidStatus = selectedBatchData.some(
-  //     (item) => item.REQ_STATUS !== "A"
-  //   );
-  
-  //   if (hasInvalidStatus) {
-  //     message.warning(
-  //       "ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก"
-  //     );
-  //   } else if (selectedBatchData.length > 0) {
-  //     dispatch(
-  //       actions.CreateBatchId(selectedBatchData.map((item) => item.REQ_ID))
-  //     ).then(() => {
-  //       const updatedBatchData = store.getState().main.batchList.items;
-  //       const updatedFormData = formdata.map((item) => {
-  //         const updatedItem = updatedBatchData.find(
-  //           (batchItem) => batchItem.REQ_ID === item.REQ_ID
-  //         );
-  //         return updatedItem ? { ...item, REQ_BATCHNO: updatedItem.REQ_BATCHNO } : item;
-  //       });
-  
-  //       setFormData(updatedFormData);
-  //       message.success("ออกเลขชุดข้อมูลสำเร็จ");
-  //     });
-  //   } else {
-  //     message.warning(
-  //       "กรุณาเลือกแถวที่มีสถานะเป็น 'อนุมัติ' สำหรับการออกเลขชุดข้อมูล"
-  //     );
-  //   }
-  // };
   
   const handleMakeRealRequest = (e, record) => {
     const selectedBatchData = formdata.filter((item) =>
