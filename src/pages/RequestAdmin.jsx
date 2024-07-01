@@ -349,15 +349,15 @@ const RequestAdmin = () => {
       render: (value, record) => {
         const menu = (
           <Menu onClick={(e) => handleTransaction(e, record)}>
-            <Menu.Item key="0">N</Menu.Item>
-            <Menu.Item key="1">Y</Menu.Item>
+            <Menu.Item key="N">N</Menu.Item>
+            <Menu.Item key="Y">Y</Menu.Item>
           </Menu>
         );
         return (
           <Dropdown overlay={menu} trigger={["click"]}>
             <Button>
               <Space>
-                {value === "0" ? "N" : "Y"}
+                {value}
                 <DownOutlined />
               </Space>
             </Button>
