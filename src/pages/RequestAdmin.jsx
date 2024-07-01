@@ -187,6 +187,25 @@ const RequestAdmin = () => {
     }
   };
 
+  // const handleGenerateMakeRealRequest = (e, record) => {
+  //   message.info("BatchNo คือ " + e.key);
+  //   const { key } = e;
+
+  //   const updatedFormData = formdata.map((item) => {
+  //     if (item.REQ_ID === record.REQ_ID) {
+  //       return { ...item, REQ_TRANS: key };
+  //     }
+  //     return item;
+  //   });
+  //   setFormData(updatedFormData);
+
+  //   //อัพเดตข้อมูลดั้งเดิม
+  //   const updatedOriginalData = originalData.map((item) => {
+  //     if (item)
+  //   })
+  // };
+
+
   const handleGenerateBatchData = () => {
     const selectedBatchData = formdata.filter((item) =>
       selectedRowKeys.includes(item.REQ_ID)
@@ -424,7 +443,7 @@ const RequestAdmin = () => {
           <Button type="primary" onClick={handleGenerateBatchData}>
             ออกเลขชุดข้อมูล
           </Button>
-          <Button type="primary">สร้างคำขอในระบบ</Button>
+          <Button type="primary" onClick={(e) => handleGenerateMakeRealRequest(e, record)}>สร้างคำขอในระบบ</Button>
           <Button type="primary">ส่งข้อมูลไปรอจ่าย</Button>
           <Button type="primary" onClick={handleGeneratePDF}>
             ออกรายงานส่งการเงิน

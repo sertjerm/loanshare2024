@@ -370,7 +370,7 @@ export const DeleteRequest = (req_id) => {
   //   });
 };
 
-// ฟังก์ชันสำหรับการ UpdateLoanRequest
+// ฟังก์ชันสำหรับการ CreateBatchId 
 export const CreateBatchId = (data) => {
   console.log("CreateBatchId", JSON.stringify(data));
 

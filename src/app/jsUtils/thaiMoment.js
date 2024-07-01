@@ -7,7 +7,7 @@ moment.locale("th");
 
 // ฟังก์ชันแปลงวันที่
 export const formatDateInThai = (dateString) => {
-  console.log('formatDateInThai',dateString);
+  // console.log('formatDateInThai',dateString);
   const date = moment(
     parseInt(dateString.replace(/\/Date\((\d+)\+\d+\)\//, "$1"))
   );
