@@ -187,25 +187,6 @@ const RequestAdmin = () => {
     }
   };
 
-  // const handleGenerateMakeRealRequest = (e, record) => {
-  //   message.info("BatchNo คือ " + e.key);
-  //   const { key } = e;
-
-  //   const updatedFormData = formdata.map((item) => {
-  //     if (item.REQ_ID === record.REQ_ID) {
-  //       return { ...item, REQ_TRANS: key };
-  //     }
-  //     return item;
-  //   });
-  //   setFormData(updatedFormData);
-
-  //   //อัพเดตข้อมูลดั้งเดิม
-  //   const updatedOriginalData = originalData.map((item) => {
-  //     if (item)
-  //   })
-  // };
-
-
   const handleGenerateBatchData = () => {
     const selectedBatchData = formdata.filter((item) =>
       selectedRowKeys.includes(item.REQ_ID)
@@ -365,24 +346,30 @@ const RequestAdmin = () => {
       title: "Transaction",
       dataIndex: "REQ_TRANS",
       key: "REQ_TRANS",
-      render: (value, record) => {
-        const menu = (
-          <Menu onClick={(e) => handleTransaction(e, record)}>
-            <Menu.Item key="N">N</Menu.Item>
-            <Menu.Item key="Y">Y</Menu.Item>
-          </Menu>
-        );
-        return (
-          <Dropdown overlay={menu} trigger={["click"]}>
-            <Button>
-              <Space>
-                {value}
-                <DownOutlined />
-              </Space>
-            </Button>
-          </Dropdown>
-        );
-      },
+      render :(value,record)=>{
+        return <div className="text-center">{value==="Y"?
+         <Badge status="success" text="โอนแล้ว" />
+         :<Badge status="error" text="ยังไม่โอน" />}
+        </div>
+      }
+      // render: (value, record) => {
+      //   const menu = (
+      //     <Menu   onClick={(e) => handleTransaction(e, record)}>
+      //       <Menu.Item key="N">N</Menu.Item>
+      //       <Menu.Item key="Y">Y</Menu.Item>
+      //     </Menu>
+      //   );
+      //   return (
+      //     <Dropdown overlay={menu} trigger={["click"]}>
+      //       <Button>
+      //         <Space>
+      //           {value}
+      //           <DownOutlined />
+      //         </Space>
+      //       </Button>
+      //     </Dropdown>
+      //   );
+      // },
     },
   ];
 
@@ -440,12 +427,12 @@ const RequestAdmin = () => {
       </Card>
       <div className="button">
         <Flex gap="small" wrap="wrap">
-          <Button type="primary" onClick={handleGenerateBatchData}>
+          <Button type="default" onClick={handleGenerateBatchData}>
             ออกเลขชุดข้อมูล
           </Button>
-          <Button type="primary" onClick={(e) => handleGenerateMakeRealRequest(e, record)}>สร้างคำขอในระบบ</Button>
-          <Button type="primary">ส่งข้อมูลไปรอจ่าย</Button>
-          <Button type="primary" onClick={handleGeneratePDF}>
+          <Button type="default">สร้างคำขอในระบบ</Button>
+          <Button type="default">ส่งข้อมูลไปรอจ่าย</Button>
+          <Button type="default" onClick={handleGeneratePDF}>
             ออกรายงานส่งการเงิน
           </Button>
         </Flex>
