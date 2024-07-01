@@ -15,8 +15,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     {/* Wrap your app in the Provider */}
     {/* The store we defined earlier */}
     <Provider store={store}>
-      {/* <App /> */}
-      <AppAdmin />
+      <App />
+      {/* <AppAdmin /> */}
     </Provider>
   </React.StrictMode>
 );
