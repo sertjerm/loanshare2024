@@ -81,6 +81,7 @@ const initialState = {
   savedloan:{isLoading:false,item:null},
   batchList: {isLoading:false,items:null},
   user: { isLoading:false, item:null },
+  makereal: {isLoading:false,items:null},
 };
 
 const mainSlice = createSlice({
@@ -203,6 +204,21 @@ const mainSlice = createSlice({
       state.batchList.isLoading = false;
       //saveState(state); // Save state to localStorage
     },
+    makerealRequest(state) {
+      console.log(`makeRealRequest${state}`);
+      state.makereal.isLoading = true;
+      state.makereal.items = null;
+      //saveState(state); // Save state to localStorage
+    },
+    makerealSuccess(state, action) {
+      state.makereal.isLoading = false;
+      state.makereal.items = action.payload.data;
+      //saveState(state); // Save state to localStorage
+    },
+    makerealFailure(state) {
+      state.makereal.isLoading = false;
+      //saveState(state); // Save state to localStorage
+    },
     // loginAdminRequest(state) {
     //   console.log(`loginRequest${state}`);
     //   state.user.isLoading = true;
@@ -251,6 +267,10 @@ export const {
   getBatchListRequest,
   getBatchListSuccess,
   getBatchListFailure,
+
+  makerealRequest,
+  makerealSuccess,
+  makerealFailure,
 
   loginAdminRequest,
   loginAdminSuccess,

@@ -137,36 +137,6 @@ const RequestAdmin = () => {
     }
   };
 
-  const handleTransaction = (e, record) => {
-    message.info("Trans Change to: " + e.key);
-    const { key } = e;
-
-    // อัพเดตข้อมูลที่กรอง
-    const updatedFormData = formdata.map((item) => {
-      if (item.REQ_ID === record.REQ_ID) {
-        return { ...item, REQ_TRANS: key };
-      }
-      return item;
-    });
-    setFormData(updatedFormData);
-
-    // อัพเดตข้อมูลดั้งเดิม
-    const updatedOriginalData = originalData.map((item) => {
-      if (item.REQ_ID === record.REQ_ID) {
-        return { ...item, REQ_TRANS: key };
-      }
-      return item;
-    });
-    setOriginalData(updatedOriginalData);
-
-    // ส่งข้อมูลที่อัพเดตไปยัง Redux
-    dispatch(
-      actions.UpdateLoanRequest(
-        updatedOriginalData.find((item) => item.REQ_ID === record.REQ_ID)
-      )
-    );
-  };
-
   //เพื่อให้ตรวจสอบแถวที่มีสถานะเป็น "รอดำเนินการ" หรือ "ไม่อนุมัติ"
   const handleBatchNoSelect = (value) => {
     setSelectedBatchNo(value);
@@ -192,18 +162,114 @@ const RequestAdmin = () => {
       selectedRowKeys.includes(item.REQ_ID)
     );
     console.log("Selected Batch Data for CreateBatchId:", selectedBatchData);
-
+  
     const hasInvalidStatus = selectedBatchData.some(
       (item) => item.REQ_STATUS !== "A"
     );
-
+  
     if (hasInvalidStatus) {
       message.warning(
         "ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก"
       );
     } else if (selectedBatchData.length > 0) {
+      // Optimistically update the state
+      const newBatchNo = Date.now().toString(); // Generate a unique batch number
+      const updatedFormData = formdata.map((item) => {
+        if (selectedRowKeys.includes(item.REQ_ID)) {
+          return { ...item, REQ_BATCHNO: newBatchNo };
+        }
+        return item;
+      });
+  
+      setFormData(updatedFormData);
+      message.success("ออกเลขชุดข้อมูลสำเร็จ");
+  
+      // Dispatch the action to update the server
       dispatch(
-        actions.CreateBatchId(selectedBatchData.map((item) => item.REQ_BATCHNO))
+        actions.CreateBatchId(selectedBatchData.map((item) => item.REQ_ID))
+      ).then(() => {
+        const updatedBatchData = store.getState().main.batchList.items;
+        const syncedFormData = formdata.map((item) => {
+          const updatedItem = updatedBatchData.find(
+            (batchItem) => batchItem.REQ_ID === item.REQ_ID
+          );
+          return updatedItem ? { ...item, REQ_BATCHNO: updatedItem.REQ_BATCHNO } : item;
+        });
+  
+        setFormData(syncedFormData); // Ensure state consistency with server response
+      });
+    } else {
+      message.warning(
+        "กรุณาเลือกแถวที่มีสถานะเป็น 'อนุมัติ' สำหรับการออกเลขชุดข้อมูล"
+      );
+    }
+  };
+  
+
+  // const handleGenerateBatchData = () => {
+  //   const selectedBatchData = formdata.filter((item) =>
+  //     selectedRowKeys.includes(item.REQ_ID)
+  //   );
+  //   console.log("Selected Batch Data for CreateBatchId:", selectedBatchData);
+  
+  //   const hasInvalidStatus = selectedBatchData.some(
+  //     (item) => item.REQ_STATUS !== "A"
+  //   );
+  
+  //   if (hasInvalidStatus) {
+  //     message.warning(
+  //       "ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก"
+  //     );
+  //   } else if (selectedBatchData.length > 0) {
+  //     dispatch(
+  //       actions.CreateBatchId(selectedBatchData.map((item) => item.REQ_ID))
+  //     ).then(() => {
+  //       const updatedBatchData = store.getState().main.batchList.items;
+  //       const updatedFormData = formdata.map((item) => {
+  //         const updatedItem = updatedBatchData.find(
+  //           (batchItem) => batchItem.REQ_ID === item.REQ_ID
+  //         );
+  //         return updatedItem ? { ...item, REQ_BATCHNO: updatedItem.REQ_BATCHNO } : item;
+  //       });
+  
+  //       setFormData(updatedFormData);
+  //       message.success("ออกเลขชุดข้อมูลสำเร็จ");
+  //     });
+  //   } else {
+  //     message.warning(
+  //       "กรุณาเลือกแถวที่มีสถานะเป็น 'อนุมัติ' สำหรับการออกเลขชุดข้อมูล"
+  //     );
+  //   }
+  // };
+  
+  const handleMakeRealRequest = (e, record) => {
+    const selectedBatchData = formdata.filter((item) =>
+      selectedRowKeys.includes(item.REQ_ID)
+    );
+    console.log("Selected Batch Data for MakeRealRequest:", selectedBatchData);
+  
+    // Check if any selected row has a batchid and transaction status as "ยังไม่โอน"
+    const hasUntransferredTransaction = selectedBatchData.some(
+      (item) => item.REQ_TRANS !== "Y"
+    );
+  
+    const hasInvalidStatus = selectedBatchData.some(
+      (item) => item.REQ_STATUS !== "A"
+    );
+  
+    if (hasInvalidStatus) {
+      message.warning(
+        "ไม่สามารถออกเลขชุดได้เนื่องจากมีแถวที่มีสถานะ 'รอดำเนินการ' หรือ 'ไม่อนุมัติ' ถูกเลือก"
+      );
+    } else if (hasUntransferredTransaction) {
+      message.warning(
+        "ไม่สามารถส่งข้อมูลได้เนื่องจากมีแถวที่ยังไม่ได้โอน"
+      );
+    } else if (selectedBatchData.length > 0) {
+      dispatch(
+        actions.MakeRealRequest(
+          selectedBatchData.map((item) => item.REQ_BATCHNO)
+        )
       );
     } else {
       message.warning(
@@ -211,6 +277,7 @@ const RequestAdmin = () => {
       );
     }
   };
+  
 
   const handleFilterStatusChange = (checkedValues) => {
     setFilterStatus(checkedValues);
@@ -346,12 +413,17 @@ const RequestAdmin = () => {
       title: "Transaction",
       dataIndex: "REQ_TRANS",
       key: "REQ_TRANS",
-      render :(value,record)=>{
-        return <div className="text-center">{value==="Y"?
-         <Badge status="success" text="โอนแล้ว" />
-         :<Badge status="error" text="ยังไม่โอน" />}
-        </div>
-      }
+      render: (value, record) => {
+        return (
+          <div className="text-center">
+            {value === "Y" ? (
+              <Badge status="success" text="โอนแล้ว" />
+            ) : (
+              <Badge status="error" text="ยังไม่โอน" />
+            )}
+          </div>
+        );
+      },
       // render: (value, record) => {
       //   const menu = (
       //     <Menu   onClick={(e) => handleTransaction(e, record)}>
@@ -375,7 +447,9 @@ const RequestAdmin = () => {
 
   return (
     <AdminPage>
-      <Button onClick={handleLogout} style={{ float: 'right' }}>Logout</Button>
+      <Button onClick={handleLogout} style={{ float: "right" }}>
+        Logout
+      </Button>
       <div className="datepicker">
         <span>ข้อมูลการยื่นกู้วันที่ </span>
         <DateDisabled onDateSelect={handleDateSelect} />
@@ -431,7 +505,9 @@ const RequestAdmin = () => {
             ออกเลขชุดข้อมูล
           </Button>
           <Button type="default">สร้างคำขอในระบบ</Button>
-          <Button type="default">ส่งข้อมูลไปรอจ่าย</Button>
+          <Button type="default" onClick={handleMakeRealRequest}>
+            ส่งข้อมูลไปรอจ่าย
+          </Button>
           <Button type="default" onClick={handleGeneratePDF}>
             ออกรายงานส่งการเงิน
           </Button>
