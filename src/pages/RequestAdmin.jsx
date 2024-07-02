@@ -298,7 +298,7 @@ const RequestAdmin = () => {
       title: "วิธีการส่งชำระ",
       dataIndex: "PAYMET",
       key: "PAYMET",
-      render: (value) => (value === 1 ? "ส่งเงินต้นคงที่" : "ส่งแฟลตเรต"),
+      render: (value) => (value === 2 ? "ส่งเงินต้นคงที่" : "ส่งแฟลตเรต"),
     },
     {
       // title: "ล้างหนี้",

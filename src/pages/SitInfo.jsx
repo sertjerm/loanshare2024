@@ -18,6 +18,7 @@ import moment from "moment";
 import "moment/locale/th";
 import { formatDateInThai } from "../app/jsUtils/thaiMoment";
 import PendingLoan from "./PendingLoan";
+import Meta from "antd/es/card/Meta";
 
 // ตั้งค่า moment ให้ใช้ภาษาไทย
 moment.locale("th");
@@ -83,10 +84,17 @@ const SitInfo = (props) => {
   let title = "ไม่มีสิทธิกู้";
   let icon = <CloseCircleOutlined />;
 
+
+
+  let is_noloan= member?.IS_NOLOAN=== member?.IS_ALLOW;
+  let is_chor = member?.IS_CHOR=== member?.IS_ALLOW;
+  let is_shargrd =member?.IS_SHARGRD=== member?.IS_ALLOW;
+
   if (member?.IS_ALLOW) {
     type = "success";
     title = "มีสิทธิ์กู้";
     icon = <CheckCircleOutlined />;
+
   } else if (member?.REQ_DATE) {
     // type = "warning";
     type = "info";
@@ -100,34 +108,49 @@ const SitInfo = (props) => {
   return (
     <GeneralPage>
       <Card className={`my-card alert-card ${type} my-2`}>
-        <div className="icon">{icon}</div>
-        <h2>{title}</h2>
+      <Meta
+            className="mb-4"
+            avatar={
+              <Avatar
+                src={
+                  "https://apps2.coop.ku.ac.th/asset/member_photo/" +
+                  member?.MEMB_CODE +
+                  ".png"
+                }
+                size={100}
+              />
+            }
+            title={`[${member?.MEMB_CODE}] ${member?.FULLNAME}`}
+            description={member?.DEPT_NAME}
+          />
+        {/* <div className="icon">{icon}</div> */}
+        <h2 className={`text-${type}`}>{title}</h2>
         {member?.REQ_DATE == null ? (
           <p>
-            <Alert
+           {is_noloan&& <Alert
               message="ไม่มีหนี้"
               type={noloan[member?.IS_NOLOAN]}
               showIcon
-            />
-            <Alert
+            />}
+            {is_shargrd&&<Alert
               message="มีหนี้หุ้นค้ำสัญญาเดียว"
               type={shargrd[member?.IS_SHARGRD]}
               showIcon
-            />
-            <Alert
+            />}
+            {is_chor&&<Alert
               message="มีหนี้ฉุกเฉินเท่านั้น"
               type={chor[member?.IS_CHOR]}
               showIcon
-            />
+            />}
           </p>
         ) : (
           <PendingLoan member={member} />
         )}
         {member?.IS_ALLOW === 1 ? (
           <>
-            <Button type="default" size="large" onClick={() => SignOut()}>
+            {/* <Button type="default" size="large" onClick={() => SignOut()}>
               back
-            </Button>
+            </Button> */}
             <Button type="primary" size="large" onClick={() => next()}>
               ยื่นกู้
             </Button>

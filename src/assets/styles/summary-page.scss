@@ -1,12 +1,14 @@
-.summary-card {
+.summary-card.alert-card {
   .ant-card-body {
     padding: 5px;
     .ant-descriptions-view {
       border-radius: 0;
-    }
+  
     .ant-descriptions-item-label {
       text-align: right;
-      // color: red !important;
+      white-space: nowrap;
+      // color: red;
     }
+  }
   }
 }

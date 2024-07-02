@@ -198,16 +198,15 @@ const RequestForm = (props) => {
       AMT: MAX_AMT,
       PPM: MAX_PPM,
       CNT: MAX_CNT,
-      PAYMENT_TYPE: 2,
+      PAYMENT_TYPE:PAYMENT_TYPE,
     };
-    
-    performCalculations(updatedLoan, "AMT",updatedLoan.AMT);
+    dispatch(actions.updateNewLoan(updatedLoan));
   // Update the form fields with the new values
   form.setFieldsValue({
-    AMT: MAX_AMT,
-    PPM: MAX_PPM,
-    CNT: MAX_CNT,
-    PAYMENT_TYPE: 2,
+    AMT: updatedLoan.AMT,
+    PPM: updatedLoan.PPM,
+    CNT: updatedLoan.CNT,
+    PAYMENT_TYPE: updatedLoan.PAYMENT_TYPE,
   });
   };
   const handleChange = (id, value) => {
@@ -279,8 +278,9 @@ const RequestForm = (props) => {
             >
               <Radio.Group
                 options={[
-                  { label: "ส่งเงินต้นคงที่", value: 2 },
                   { label: "ส่งแฟลตเรต", value: 1 },
+                  { label: "ส่งเงินต้นคงที่", value: 2},
+                
                 ]}
                 optionType="button"
                 buttonStyle="solid"
@@ -344,9 +344,9 @@ const RequestForm = (props) => {
 
           <div className="div-form-control">
             <Form.Item>
-              <Button htmlType="button" onClick={ResetForm}>
+              {/* <Button htmlType="button" onClick={ResetForm}>
                 รีเซ็ต
-              </Button>
+              </Button> */}
               <Button type="primary" htmlType="submit">
                 ยืนยัน
               </Button>

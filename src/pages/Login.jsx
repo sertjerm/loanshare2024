@@ -59,7 +59,7 @@ const Login = (props) => {
           //   }}
           initialValues={{
             //   remember: true,
-            username: "006315",
+            username: "",
             // username: "17365",
             password: "bypass",
           }}
@@ -105,10 +105,9 @@ const Login = (props) => {
           </Form.Item>
         </Form>
       </Card>
-      <Card className="my-card">
-        {/* <ScrollableInputNumber /> */}
+      {/* <Card className="my-card">
         <MoneyPicker />
-      </Card>
+      </Card> */}
     </GeneralPage>
   );
 };

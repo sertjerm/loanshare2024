@@ -3,10 +3,13 @@ import GeneralPage from "./GeneralPage";
 import { Button, Card, Descriptions, message } from "antd";
 import { useSelector } from "react-redux";
 import { NumericFormat } from "react-number-format";
+import "../assets/styles/sit-info.scss";
 import "../assets/styles/summary-page.scss";
+
 import { redirect } from "react-router-dom";
 import MyLoader from "../components/custom/MyLoader";
 import PendingLoan from "./PendingLoan";
+import { CheckCircleOutlined } from "@ant-design/icons";
 
 const Summary = (props) => {
   const { next, setStep, SignOut } = props;
@@ -16,9 +19,9 @@ const Summary = (props) => {
   );
   const { item: user } = useSelector((state) => state.user.user);
   const onSignOut = () => {
-    // SignOut();
-    // window.location.reload();
-    next();
+    SignOut();
+    window.location.reload();
+    // next();
   };
   useEffect(() => {
     if (!user) {
@@ -31,7 +34,9 @@ const Summary = (props) => {
 
   return (
     <GeneralPage>
-      <Card className="my-card summary-card" title="สรุปข้อมูลการกู้">
+      <Card className="my-card summary-card alert-card success" >
+      <div className="icon"><CheckCircleOutlined /></div>
+      <h2>ยื่นกู้สำเร็จ</h2>
         <Descriptions column={1} bordered>
           <Descriptions.Item label="วงเงินกู้">
             <NumericFormat
@@ -95,7 +100,7 @@ const Summary = (props) => {
           </Button> */}
         </div>
       </Card>
-      <Card className="my-card mt-2">
+      {/* <Card className="my-card mt-2">
         <pre style={{ height: "auto", whiteSpace: "pre-wrap", color: "blue" }}>
           {JSON.stringify(savedloan, null, 2)}
         </pre>
@@ -103,7 +108,7 @@ const Summary = (props) => {
         <pre style={{ height: "auto", whiteSpace: "pre-wrap", color: "red" }}>
           {JSON.stringify(newloan, null, 2)}
         </pre>
-      </Card>
+      </Card> */}
     </GeneralPage>
   );
 };
